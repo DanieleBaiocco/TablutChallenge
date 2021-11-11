@@ -1,12 +1,13 @@
 package it.unibo.ai.didattica.competition.tablut.ai.decisionmaking;
 
-import it.unibo.ai.didattica.competition.tablut.ai.UtilityFeatures;
+import it.unibo.ai.didattica.competition.tablut.ai.model.StateDecorator;
+import it.unibo.ai.didattica.competition.tablut.ai.TablutUtility;
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
-import javax.swing.text.Utilities;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 public class MinMax {
 
@@ -14,6 +15,7 @@ public class MinMax {
     private int depth;
     private HeuristicNiegghie heuristic;
 
+    private Action bestAction;
 
     public MinMax(Turn player, int depth) {
         this.player = player;
@@ -22,22 +24,16 @@ public class MinMax {
 
     }
 
+    //TODO
+    //capisci perchè non usi il timeout e il player del costruttore
     public Action makeDecision(State state, int timeout) {
-        //ovviamente per ogni azione disponibile si fa il min value su di essa perchè tocca all'opponent
-        //credo? però in teoria un distinguo è necessario no?
-
-        //non capisco perchè dover sempre far il min sui figli e poi massimizzare il risultato dei figli,
-        //indipendentemente da se gioco come bianco (attacco) o come nero (difesa).
-        // l'euristica in teoria dà valori positivi a cose buone per l'attacco, e valori negativi per
-        //cose buone per la difesa, in modo da poter esser utilizzata in entrambe le situazioni.
-        //Quindi se gioco come nero (difesa) devo prendere il valore dell'euristica più basso dalle possibili
-        //mosse, se gioco come bianco, quello più alto no???
-
-        //credo basti negare l'heuristic function quando gioco come nero
-        return null;
+        double alpha = Double.NEGATIVE_INFINITY;
+        double beta = Double.POSITIVE_INFINITY;
+        minmaxComputation(state.clone(), this.depth, alpha, beta, state.getTurn() == Turn.WHITE);
+        return this.bestAction;
     }
 
-    public double minmaxComputation(State currentState, int depth, boolean maximisingPlayer){
+    public double minmaxComputation(State currentState, int depth, double alpha, double beta, boolean maximisingPlayer){
         Turn currentTurn = currentState.getTurn();
         if(depth == 0 || currentTurn == Turn.WHITEWIN || currentTurn == Turn.BLACKWIN){
             return this.heuristic.evaluate(currentState, depth);
@@ -46,28 +42,45 @@ public class MinMax {
         if(maximisingPlayer){
             double maxEval = Double.NEGATIVE_INFINITY;
             for(Action action : possibleMoves){
-                double evaluation = this.minmaxComputation(move(currentState.clone(), action), depth - 1, false);
-                maxEval = Math.max(maxEval, evaluation);
+                double evaluation = this.minmaxComputation(TablutUtility.getInstance().movePawn(
+                        currentState.clone(), action),
+                        depth - 1, alpha, beta,false);
+                maxEval = updateEvalAndBestAction((x, y) -> x < y, maxEval, evaluation, depth, action);
+                alpha = Math.max(alpha, evaluation);
+                if(beta <= alpha)
+                    break;
             }
             return maxEval;
         }
         else{
             double minEval = Double.POSITIVE_INFINITY;
             for(Action action : possibleMoves){
-                double evaluation = this.minmaxComputation(move(currentState.clone(), action), depth - 1, true);
-                minEval = Math.min(minEval, evaluation);
+                double evaluation = this.minmaxComputation(TablutUtility.getInstance().movePawn(currentState.clone(), action),depth - 1, alpha, beta,true);
+                minEval = updateEvalAndBestAction(((x, y) -> y < x), minEval, evaluation, depth, action);
+                beta = Math.min(beta, evaluation);
+                if(beta <= alpha)
+                    break;
             }
             return minEval;
         }
     }
 
-    private State move(State currentState, Action action) {
-        return null;
+    private double updateEvalAndBestAction(BiPredicate<Double, Double> predicate,
+                                         double value, double evaluation, int depth,
+                                         Action action) {
+        if(predicate.test(value, evaluation)){
+            value = evaluation;
+            if(depth == this.depth)
+                this.bestAction = action;
+        }
+        return value;
     }
 
+
     private List<Action> getAllPossibleMoves(State state, Turn turn) {
+        StateDecorator stateDeco = new StateDecorator(state);
         if(turn == Turn.WHITE)
-            return UtilityFeatures.getAllPossibleWhiteMoves(state);
-        return UtilityFeatures.getAllPossibleBlackMoves(state);
+            return stateDeco.getAllWhiteMoves();
+        return  stateDeco.getAllBlackMoves();
     }
 }
