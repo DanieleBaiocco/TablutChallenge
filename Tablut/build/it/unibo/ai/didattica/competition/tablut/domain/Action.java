@@ -17,9 +17,9 @@ public class Action implements Serializable {
 	private String from;
 	private String to;
 
-	private State.Turn turn;
+	private Turn turn;
 
-	public Action(String from, String to, StateTablut.Turn t) throws IOException {
+	public Action(String from, String to, Turn t) throws IOException {
 		if (from.length() != 2 || to.length() != 2) {
 			throw new InvalidParameterException("the FROM and the TO string must have length=2");
 		} else {
@@ -45,11 +45,11 @@ public class Action implements Serializable {
 		this.to = to;
 	}
 
-	public StateTablut.Turn getTurn() {
+	public Turn getTurn() {
 		return turn;
 	}
 
-	public void setTurn(StateTablut.Turn turn) {
+	public void setTurn(Turn turn) {
 		this.turn = turn;
 	}
 

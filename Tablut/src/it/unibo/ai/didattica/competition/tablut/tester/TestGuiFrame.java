@@ -12,7 +12,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import it.unibo.ai.didattica.competition.tablut.domain.*;
-import it.unibo.ai.didattica.competition.tablut.domain.State.*;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
 
 public class TestGuiFrame extends JFrame{
@@ -22,7 +21,7 @@ public class TestGuiFrame extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Gui theGui;
-	private State state;
+	private IState state;
 	private Game theGame;
 	private Label l1;
 	private Label l2;
@@ -93,7 +92,7 @@ public class TestGuiFrame extends JFrame{
 			}
 			board3[4][4] = Pawn.THRONE;
 			state = new StateTablut();
-			state.setTurn(State.Turn.WHITE);
+			state.setTurn(Turn.WHITE);
 			theGame=new GameAshtonTablut(0, -1, "test", "testW", "testB");
 			state.setBoard(board3);
 			break;	
@@ -152,7 +151,7 @@ public class TestGuiFrame extends JFrame{
 
 
 
-	public void setState(State state) {
+		public void setState(IState state) {
 		this.state = state;
 	}
 

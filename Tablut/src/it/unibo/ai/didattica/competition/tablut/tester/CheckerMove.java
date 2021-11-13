@@ -6,22 +6,19 @@ import java.awt.event.ActionListener;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import it.unibo.ai.didattica.competition.tablut.domain.Action;
-import it.unibo.ai.didattica.competition.tablut.domain.Game;
-import it.unibo.ai.didattica.competition.tablut.domain.State;
-import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
 
 public class CheckerMove implements ActionListener {
 
 	private Gui theGui;
 	private JTextField posizione;
-	private State state;
+	private IState state;
 	private TestGuiFrame ret;
 	private Game game;
 	private JRadioButton turno;
 
-	public CheckerMove(Gui theGui, JTextField field, State state, TestGuiFrame ret, Game game, JRadioButton jr) {
+	public CheckerMove(Gui theGui, JTextField field, IState state, TestGuiFrame ret, Game game, JRadioButton jr) {
 		super();
 		this.setTheGui(theGui);
 		this.posizione = field;

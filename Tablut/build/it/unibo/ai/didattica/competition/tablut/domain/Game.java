@@ -47,9 +47,9 @@ public interface Game {
 	 * @throws ClimbingCitadelException
 	 * @throws CitadelException
 	 */
-	public State checkMove(State state, Action a)
+	public IState checkMove(IState state, Action a)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException;
 
-	public void endGame(State state);
+	public void endGame(IState state);
 }

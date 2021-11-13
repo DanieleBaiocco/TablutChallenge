@@ -10,55 +10,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Andrea Piretti
  *
  */
-public abstract class State {
-
-	/**
-	 * Turn represent the player that has to move or the end of the game(A win
-	 * by a player or a draw)
-	 * 
-	 * @author A.Piretti
-	 */
-	public enum Turn {
-		WHITE("W"), BLACK("B"), WHITEWIN("WW"), BLACKWIN("BW"), DRAW("D");
-		private final String turn;
-
-		private Turn(String s) {
-			turn = s;
-		}
-
-		public boolean equalsTurn(String otherName) {
-			return (otherName == null) ? false : turn.equals(otherName);
-		}
-
-		public String toString() {
-			return turn;
-		}
-	}
-
-	/**
-	 * 
-	 * Pawn represents the content of a box in the board
-	 * 
-	 * @author A.Piretti
-	 *
-	 */
-	public enum Pawn {
-		EMPTY("O"), WHITE("W"), BLACK("B"), THRONE("T"), KING("K");
-		private final String pawn;
-
-		private Pawn(String s) {
-			pawn = s;
-		}
-
-		public boolean equalsPawn(String otherPawn) {
-			return (otherPawn == null) ? false : pawn.equals(otherPawn);
-		}
-
-		public String toString() {
-			return pawn;
-		}
-
-	}
+public abstract class State implements IState{
 
 	protected Pawn board[][];
 	protected Turn turn;
@@ -195,7 +147,7 @@ public abstract class State {
 		return ret;
 	}
 
-	public State clone() {
+	public IState clone() {
 		Class<? extends State> stateclass = this.getClass();
 		Constructor<? extends State> cons = null;
 		State result = null;

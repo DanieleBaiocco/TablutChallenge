@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.logging.*;
 
 import it.unibo.ai.didattica.competition.tablut.domain.*;
-import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.domain.Turn;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
 import it.unibo.ai.didattica.competition.tablut.util.Configuration;
 import it.unibo.ai.didattica.competition.tablut.util.StreamUtils;
@@ -37,7 +37,7 @@ public class Server implements Runnable {
 	/**
 	 * State of the game
 	 */
-	private State state;
+	private IState state;
 	/**
 	 * Number of seconds allowed for a decision
 	 */
@@ -103,7 +103,7 @@ public class Server implements Runnable {
 		this.gson = new Gson();
 	}
 
-	public void initializeGUI(State state) {
+	public void initializeGUI(IState state) {
 		this.theGui = new Gui(this.gameC);
 		this.theGui.update(state);
 	}
@@ -505,7 +505,7 @@ public class Server implements Runnable {
 			break;
 		case 4:
 			state = new StateTablut();
-			state.setTurn(State.Turn.WHITE);
+			state.setTurn(Turn.WHITE);
 			this.game = new GameAshtonTablut(state, repeated, this.cacheSize, "logs", whiteName, blackName);
 			break;
 		default:

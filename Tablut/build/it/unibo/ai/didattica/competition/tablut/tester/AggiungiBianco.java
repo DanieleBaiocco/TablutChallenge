@@ -6,20 +6,17 @@ import java.io.IOException;
 
 import javax.swing.JTextField;
 
-import it.unibo.ai.didattica.competition.tablut.domain.Action;
-import it.unibo.ai.didattica.competition.tablut.domain.State;
-import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
-import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
 
 public class AggiungiBianco implements ActionListener {
 
 	private Gui theGui;
 	private JTextField posizione;
-	private State state;
+	private IState state;
 	private TestGuiFrame ret;
 
-	public AggiungiBianco(Gui theGui, JTextField field, State state, TestGuiFrame ret) {
+	public AggiungiBianco(Gui theGui, JTextField field, IState state, TestGuiFrame ret) {
 		super();
 		this.theGui = theGui;
 		this.posizione = field;

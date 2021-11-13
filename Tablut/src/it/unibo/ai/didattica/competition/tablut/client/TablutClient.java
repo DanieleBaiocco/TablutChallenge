@@ -9,9 +9,7 @@ import java.security.InvalidParameterException;
 
 import com.google.gson.Gson;
 
-import it.unibo.ai.didattica.competition.tablut.domain.Action;
-import it.unibo.ai.didattica.competition.tablut.domain.State;
-import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
+import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.util.Configuration;
 import it.unibo.ai.didattica.competition.tablut.util.StreamUtils;
 
@@ -23,29 +21,29 @@ import it.unibo.ai.didattica.competition.tablut.util.StreamUtils;
  */
 public abstract class TablutClient implements Runnable {
 
-	private State.Turn player;
+	private Turn player;
 	private String name;
 	private Socket playerSocket;
 	private DataInputStream in;
 	private DataOutputStream out;
 	private Gson gson;
-	private State currentState;
+	private IState currentState;
 	private int timeout;
 	private String serverIp;
 
-	public State.Turn getPlayer() {
+	public Turn getPlayer() {
 		return player;
 	}
 
-	public void setPlayer(State.Turn player) {
+	public void setPlayer(Turn player) {
 		this.player = player;
 	}
 
-	public State getCurrentState() {
+	public IState getCurrentState() {
 		return currentState;
 	}
 
-	public void setCurrentState(State currentState) {
+	public void setCurrentState(IState currentState) {
 		this.currentState = currentState;
 	}
 
@@ -74,10 +72,10 @@ public abstract class TablutClient implements Runnable {
 		this.timeout = timeout;
 		this.gson = new Gson();
 		if (player.toLowerCase().equals("white")) {
-			this.player = State.Turn.WHITE;
+			this.player = Turn.WHITE;
 			port = Configuration.whitePort;
 		} else if (player.toLowerCase().equals("black")) {
-			this.player = State.Turn.BLACK;
+			this.player = Turn.BLACK;
 			port = Configuration.blackPort;
 		} else {
 			throw new InvalidParameterException("Player role must be BLACK or WHITE");

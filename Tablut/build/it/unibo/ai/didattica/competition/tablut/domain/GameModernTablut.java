@@ -1,7 +1,5 @@
 package it.unibo.ai.didattica.competition.tablut.domain;
 
-import it.unibo.ai.didattica.competition.tablut.domain.Action;
-import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.BoardException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ClimbingException;
@@ -31,7 +29,7 @@ public class GameModernTablut implements Game {
 	}
 
 	@Override
-	public State checkMove(State state, Action a) throws BoardException, ActionException, StopException, PawnException,
+	public IState checkMove(IState state, Action a) throws BoardException, ActionException, StopException, PawnException,
 			DiagonalException, ClimbingException, ThroneException, OccupitedException {
 		// this.loggGame.fine(a.toString());
 		// controllo la mossa
@@ -53,13 +51,13 @@ public class GameModernTablut implements Game {
 		}
 
 		// controllo che non vada sul trono
-		if (state.getPawn(rowTo, columnTo).equalsPawn(State.Pawn.THRONE.toString())) {
+		if (state.getPawn(rowTo, columnTo).equalsPawn(Pawn.THRONE.toString())) {
 			// this.loggGame.warning("Mossa sul trono");
 			throw new ThroneException(a);
 		}
 
 		// controllo la casella di arrivo
-		if (!state.getPawn(rowTo, columnTo).equalsPawn(State.Pawn.EMPTY.toString())) {
+		if (!state.getPawn(rowTo, columnTo).equalsPawn(Pawn.EMPTY.toString())) {
 			// this.loggGame.warning("Mossa sopra una casella occupata");
 			throw new OccupitedException(a);
 		}
@@ -71,7 +69,7 @@ public class GameModernTablut implements Game {
 		}
 
 		// controllo se sto muovendo una pedina giusta
-		if (state.getTurn().equalsTurn(State.Turn.WHITE.toString())) {
+		if (state.getTurn().equalsTurn(Turn.WHITE.toString())) {
 			if (!state.getPawn(rowFrom, columnFrom).equalsPawn("W")
 					&& !state.getPawn(rowFrom, columnFrom).equalsPawn("K")) {
 				// this.loggGame.warning("Giocatore "+a.getTurn()+" cerca di
@@ -79,7 +77,7 @@ public class GameModernTablut implements Game {
 				throw new PawnException(a);
 			}
 		}
-		if (state.getTurn().equalsTurn(State.Turn.BLACK.toString())) {
+		if (state.getTurn().equalsTurn(Turn.BLACK.toString())) {
 			if (!state.getPawn(rowFrom, columnFrom).equalsPawn("B")) {
 				// this.loggGame.warning("Giocatore "+a.getTurn()+" cerca di
 				// muovere una pedina avversaria");
@@ -97,8 +95,8 @@ public class GameModernTablut implements Game {
 		if (rowFrom == rowTo) {
 			if (columnFrom > columnTo) {
 				for (int i = columnTo; i < columnFrom; i++) {
-					if (!state.getPawn(rowFrom, i).equalsPawn(State.Pawn.EMPTY.toString())
-							&& !state.getPawn(rowFrom, i).equalsPawn(State.Pawn.THRONE.toString())) {
+					if (!state.getPawn(rowFrom, i).equalsPawn(Pawn.EMPTY.toString())
+							&& !state.getPawn(rowFrom, i).equalsPawn(Pawn.THRONE.toString())) {
 						// this.loggGame.warning("Mossa che scavalca una
 						// pedina");
 						throw new ClimbingException(a);
@@ -106,8 +104,8 @@ public class GameModernTablut implements Game {
 				}
 			} else {
 				for (int i = columnFrom + 1; i <= columnTo; i++) {
-					if (!state.getPawn(rowFrom, i).equalsPawn(State.Pawn.EMPTY.toString())
-							&& !state.getPawn(rowFrom, i).equalsPawn(State.Pawn.THRONE.toString())) {
+					if (!state.getPawn(rowFrom, i).equalsPawn(Pawn.EMPTY.toString())
+							&& !state.getPawn(rowFrom, i).equalsPawn(Pawn.THRONE.toString())) {
 						// this.loggGame.warning("Mossa che scavalca una
 						// pedina");
 						throw new ClimbingException(a);
@@ -117,8 +115,8 @@ public class GameModernTablut implements Game {
 		} else {
 			if (rowFrom > rowTo) {
 				for (int i = rowTo; i < rowFrom; i++) {
-					if (!state.getPawn(i, columnFrom).equalsPawn(State.Pawn.EMPTY.toString())
-							&& !state.getPawn(i, columnFrom).equalsPawn(State.Pawn.THRONE.toString())) {
+					if (!state.getPawn(i, columnFrom).equalsPawn(Pawn.EMPTY.toString())
+							&& !state.getPawn(i, columnFrom).equalsPawn(Pawn.THRONE.toString())) {
 						// this.loggGame.warning("Mossa che scavalca una
 						// pedina");
 						throw new ClimbingException(a);
@@ -126,8 +124,8 @@ public class GameModernTablut implements Game {
 				}
 			} else {
 				for (int i = rowFrom + 1; i <= rowTo; i++) {
-					if (!state.getPawn(i, columnFrom).equalsPawn(State.Pawn.EMPTY.toString())
-							&& !state.getPawn(i, columnFrom).equalsPawn(State.Pawn.THRONE.toString())) {
+					if (!state.getPawn(i, columnFrom).equalsPawn(Pawn.EMPTY.toString())
+							&& !state.getPawn(i, columnFrom).equalsPawn(Pawn.THRONE.toString())) {
 						// this.loggGame.warning("Mossa che scavalca una
 						// pedina");
 						throw new ClimbingException(a);
@@ -152,16 +150,16 @@ public class GameModernTablut implements Game {
 		return state;
 	}
 
-	private State movePawn(State state, Action a) {
-		State.Pawn pawn = state.getPawn(a.getRowFrom(), a.getColumnFrom());
-		State.Pawn[][] newBoard = state.getBoard();
+	private IState movePawn(IState state, Action a) {
+		Pawn pawn = state.getPawn(a.getRowFrom(), a.getColumnFrom());
+		Pawn[][] newBoard = state.getBoard();
 		// State newState = new State();
 
 		// libero il trono o una casella qualunque
 		if (a.getColumnFrom() == 4 && a.getRowFrom() == 4) {
-			newBoard[a.getRowFrom()][a.getColumnFrom()] = State.Pawn.THRONE;
+			newBoard[a.getRowFrom()][a.getColumnFrom()] = Pawn.THRONE;
 		} else {
-			newBoard[a.getRowFrom()][a.getColumnFrom()] = State.Pawn.EMPTY;
+			newBoard[a.getRowFrom()][a.getColumnFrom()] = Pawn.EMPTY;
 		}
 
 		// metto nel nuovo tabellone la pedina mossa
@@ -169,16 +167,16 @@ public class GameModernTablut implements Game {
 		// aggiorno il tabellone
 		state.setBoard(newBoard);
 		// cambio il turno
-		if (state.getTurn().equalsTurn(State.Turn.WHITE.toString())) {
-			state.setTurn(State.Turn.BLACK);
+		if (state.getTurn().equalsTurn(Turn.WHITE.toString())) {
+			state.setTurn(Turn.BLACK);
 		} else {
-			state.setTurn(State.Turn.WHITE);
+			state.setTurn(Turn.WHITE);
 		}
 
 		return state;
 	}
 
-	private State checkCaptureWhite(State state, Action a) {
+	private IState checkCaptureWhite(IState state, Action a) {
 		// controllo se mangio a destra
 		if (a.getColumnTo() < state.getBoard().length - 2
 				&& state.getPawn(a.getRowTo(), a.getColumnTo() + 1).equalsPawn("B")
@@ -225,14 +223,14 @@ public class GameModernTablut implements Game {
 		if ((a.getRowTo() == 0 && a.getColumnTo() == 0) || (a.getRowTo() == 8 && a.getColumnTo() == 0)
 				|| (a.getColumnTo() == 8 && a.getRowTo() == 0) || (a.getColumnTo() == 8 && a.getRowTo() == 8)) {
 			if (state.getPawn(a.getRowTo(), a.getColumnTo()).equalsPawn("K")) {
-				state.setTurn(State.Turn.WHITEWIN);
+				state.setTurn(Turn.WHITEWIN);
 			}
 		}
 
 		// controllo il pareggio
 		if (this.movesWithutCapturing >= this.movesDraw
 				&& (state.getTurn().equalsTurn("B") || state.getTurn().equalsTurn("W"))) {
-			state.setTurn(State.Turn.DRAW);
+			state.setTurn(Turn.DRAW);
 			// this.loggGame.fine("Stabilito un pareggio per troppe mosse senza
 			// mangiare");
 		}
@@ -241,21 +239,21 @@ public class GameModernTablut implements Game {
 	}
 
 	// TODO da controllare dove indexOutOfBound se controllo di mangiare il re
-	private State checkCaptureBlack(State state, Action a) {
+	private IState checkCaptureBlack(IState state, Action a) {
 		// controllo se mangio a destra
 		if (a.getColumnTo() < state.getBoard().length - 2
 				&& (state.getPawn(a.getRowTo(), a.getColumnTo() + 1).equalsPawn("W")
 						|| state.getPawn(a.getRowTo(), a.getColumnTo() + 1).equalsPawn("K"))
 				&& (state.getPawn(a.getRowTo(), a.getColumnTo() + 2).equalsPawn("B")
 						|| state.getPawn(a.getRowTo(), a.getColumnTo() + 2).equalsPawn("T"))) {
-			// nero-re-trono N.B. No indexOutOfBoundException perchè se il re si
-			// trovasse sul bordo il giocatore bianco avrebbe già vinto
+			// nero-re-trono N.B. No indexOutOfBoundException perchï¿½ se il re si
+			// trovasse sul bordo il giocatore bianco avrebbe giï¿½ vinto
 			if (state.getPawn(a.getRowTo(), a.getColumnTo() + 1).equalsPawn("K")
 					&& state.getPawn(a.getRowTo(), a.getColumnTo() + 2).equalsPawn("T")) {
 				// ho circondato il re?
 				if (state.getPawn(a.getRowTo() + 1, a.getColumnTo() + 1).equalsPawn("B")
 						&& state.getPawn(a.getRowTo() - 1, a.getColumnTo() + 1).equalsPawn("B")) {
-					state.setTurn(State.Turn.BLACKWIN);
+					state.setTurn(Turn.BLACKWIN);
 					// this.loggGame.fine("Nero vince con re catturato in:
 					// "+state.getBox(a.getRowTo(), a.getColumnTo()+1));
 				}
@@ -268,7 +266,7 @@ public class GameModernTablut implements Game {
 						|| (state.getPawn(a.getRowTo() + 1, a.getColumnTo() + 1).equalsPawn("B")))
 						&& (state.getPawn(a.getRowTo() - 1, a.getColumnTo() + 1).equalsPawn("T")
 								|| state.getPawn(a.getRowTo() - 1, a.getColumnTo() + 1).equalsPawn("B"))) {
-					state.setTurn(State.Turn.BLACKWIN);
+					state.setTurn(Turn.BLACKWIN);
 					// this.loggGame.fine("Nero vince con re catturato in:
 					// "+state.getBox(a.getRowTo(), a.getColumnTo()+1));
 				}
@@ -293,7 +291,7 @@ public class GameModernTablut implements Game {
 				// ho circondato il re?
 				if (state.getPawn(a.getRowTo() + 1, a.getColumnTo() - 1).equalsPawn("B")
 						&& state.getPawn(a.getRowTo() - 1, a.getColumnTo() - 1).equalsPawn("B")) {
-					state.setTurn(State.Turn.BLACKWIN);
+					state.setTurn(Turn.BLACKWIN);
 					// this.loggGame.fine("Nero vince con re catturato in:
 					// "+state.getBox(a.getRowTo(), a.getColumnTo()+1));
 				}
@@ -306,7 +304,7 @@ public class GameModernTablut implements Game {
 						|| (state.getPawn(a.getRowTo() + 1, a.getColumnTo() - 1).equalsPawn("B")))
 						&& (state.getPawn(a.getRowTo() - 1, a.getColumnTo() - 1).equalsPawn("T")
 								|| state.getPawn(a.getRowTo() - 1, a.getColumnTo() - 1).equalsPawn("B"))) {
-					state.setTurn(State.Turn.BLACKWIN);
+					state.setTurn(Turn.BLACKWIN);
 					// this.loggGame.fine("Nero vince con re catturato in:
 					// "+state.getBox(a.getRowTo(), a.getColumnTo()+1));
 				}
@@ -331,7 +329,7 @@ public class GameModernTablut implements Game {
 				// ho circondato re?
 				if (state.getPawn(a.getRowTo() - 1, a.getColumnTo() - 1).equalsPawn("B")
 						&& state.getPawn(a.getRowTo() - 1, a.getColumnTo() + 1).equalsPawn("B")) {
-					state.setTurn(State.Turn.BLACKWIN);
+					state.setTurn(Turn.BLACKWIN);
 					// this.loggGame.fine("Nero vince con re catturato in:
 					// "+state.getBox(a.getRowTo()-1, a.getColumnTo()));
 				}
@@ -344,7 +342,7 @@ public class GameModernTablut implements Game {
 						|| state.getPawn(a.getRowTo() - 1, a.getColumnTo() - 1).equalsPawn("B"))
 						&& (state.getPawn(a.getRowTo() - 1, a.getColumnTo() + 1).equalsPawn("T")
 								|| (state.getPawn(a.getRowTo() - 1, a.getColumnTo() + 1).equalsPawn("B")))) {
-					state.setTurn(State.Turn.BLACKWIN);
+					state.setTurn(Turn.BLACKWIN);
 					// this.loggGame.fine("Nero vince con re catturato in:
 					// "+state.getBox(a.getRowTo(), a.getColumnTo()-1));
 				}
@@ -369,7 +367,7 @@ public class GameModernTablut implements Game {
 				// ho circondato re?
 				if (state.getPawn(a.getRowTo() + 1, a.getColumnTo() - 1).equalsPawn("B")
 						&& state.getPawn(a.getRowTo() + 1, a.getColumnTo() + 1).equalsPawn("B")) {
-					state.setTurn(State.Turn.BLACKWIN);
+					state.setTurn(Turn.BLACKWIN);
 					// this.loggGame.fine("Nero vince con re catturato in:
 					// "+state.getBox(a.getRowTo()-1, a.getColumnTo()));
 				}
@@ -382,7 +380,7 @@ public class GameModernTablut implements Game {
 						|| state.getPawn(a.getRowTo() + 1, a.getColumnTo() - 1).equalsPawn("B"))
 						&& (state.getPawn(a.getRowTo() + 1, a.getColumnTo() + 1).equalsPawn("T")
 								|| (state.getPawn(a.getRowTo() + 1, a.getColumnTo() + 1).equalsPawn("B")))) {
-					state.setTurn(State.Turn.BLACKWIN);
+					state.setTurn(Turn.BLACKWIN);
 					// this.loggGame.fine("Nero vince con re catturato in:
 					// "+state.getBox(a.getRowTo(), a.getColumnTo()-1));
 				}
@@ -442,7 +440,7 @@ public class GameModernTablut implements Game {
 		// controllo il pareggio
 		if (this.movesWithutCapturing >= this.movesDraw
 				&& (state.getTurn().equalsTurn("B") || state.getTurn().equalsTurn("W"))) {
-			state.setTurn(State.Turn.DRAW);
+			state.setTurn(Turn.DRAW);
 			// this.loggGame.fine("Stabilito un pareggio per troppe mosse senza
 			// mangiare");
 		}
@@ -452,7 +450,7 @@ public class GameModernTablut implements Game {
 
 	// TODO: Implement this
 	@Override
-	public void endGame(State state) {
+	public void endGame(IState state) {
 	}
 
 }

@@ -1,19 +1,13 @@
 package it.unibo.ai.didattica.competition.tablut.client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.google.gson.Gson;
-
 import it.unibo.ai.didattica.competition.tablut.domain.*;
-import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.domain.Turn;
 
 /**
  * 
@@ -78,7 +72,7 @@ public class TablutRandomClient extends TablutClient {
 			e.printStackTrace();
 		}
 
-		State state;
+		IState state;
 
 		Game rules = null;
 		switch (this.game) {
@@ -96,7 +90,7 @@ public class TablutRandomClient extends TablutClient {
 			break;
 		case 4:
 			state = new StateTablut();
-			state.setTurn(State.Turn.WHITE);
+			state.setTurn(Turn.WHITE);
 			rules = new GameAshtonTablut(99, 0, "garbage", "fake", "fake");
 			System.out.println("Ashton Tablut game");
 			break;
@@ -128,17 +122,17 @@ public class TablutRandomClient extends TablutClient {
 
 			if (this.getPlayer().equals(Turn.WHITE)) {
 				// Mio turno
-				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITE)) {
+				if (this.getCurrentState().getTurn().equals(Turn.WHITE)) {
 					int[] buf;
 					for (int i = 0; i < state.getBoard().length; i++) {
 						for (int j = 0; j < state.getBoard().length; j++) {
-							if (state.getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())
-									|| state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
+							if (state.getPawn(i, j).equalsPawn(Pawn.WHITE.toString())
+									|| state.getPawn(i, j).equalsPawn(Pawn.KING.toString())) {
 								buf = new int[2];
 								buf[0] = i;
 								buf[1] = j;
 								pawns.add(buf);
-							} else if (state.getPawn(i, j).equalsPawn(State.Pawn.EMPTY.toString())) {
+							} else if (state.getPawn(i, j).equalsPawn(Pawn.EMPTY.toString())) {
 								buf = new int[2];
 								buf[0] = i;
 								buf[1] = j;
@@ -152,7 +146,7 @@ public class TablutRandomClient extends TablutClient {
 					boolean found = false;
 					Action a = null;
 					try {
-						a = new Action("z0", "z0", State.Turn.WHITE);
+						a = new Action("z0", "z0", Turn.WHITE);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -170,7 +164,7 @@ public class TablutRandomClient extends TablutClient {
 						String to = this.getCurrentState().getBox(selected[0], selected[1]);
 
 						try {
-							a = new Action(from, to, State.Turn.WHITE);
+							a = new Action(from, to, Turn.WHITE);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -197,21 +191,21 @@ public class TablutRandomClient extends TablutClient {
 
 				}
 				// Turno dell'avversario
-				else if (state.getTurn().equals(StateTablut.Turn.BLACK)) {
+				else if (state.getTurn().equals(Turn.BLACK)) {
 					System.out.println("Waiting for your opponent move... ");
 				}
 				// ho vinto
-				else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
+				else if (state.getTurn().equals(Turn.WHITEWIN)) {
 					System.out.println("YOU WIN!");
 					System.exit(0);
 				}
 				// ho perso
-				else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
+				else if (state.getTurn().equals(Turn.BLACKWIN)) {
 					System.out.println("YOU LOSE!");
 					System.exit(0);
 				}
 				// pareggio
-				else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
+				else if (state.getTurn().equals(Turn.DRAW)) {
 					System.out.println("DRAW!");
 					System.exit(0);
 				}
@@ -219,16 +213,16 @@ public class TablutRandomClient extends TablutClient {
 			} else {
 
 				// Mio turno
-				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACK)) {
+				if (this.getCurrentState().getTurn().equals(Turn.BLACK)) {
 					int[] buf;
 					for (int i = 0; i < state.getBoard().length; i++) {
 						for (int j = 0; j < state.getBoard().length; j++) {
-							if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+							if (state.getPawn(i, j).equalsPawn(Pawn.BLACK.toString())) {
 								buf = new int[2];
 								buf[0] = i;
 								buf[1] = j;
 								pawns.add(buf);
-							} else if (state.getPawn(i, j).equalsPawn(State.Pawn.EMPTY.toString())) {
+							} else if (state.getPawn(i, j).equalsPawn(Pawn.EMPTY.toString())) {
 								buf = new int[2];
 								buf[0] = i;
 								buf[1] = j;
@@ -242,7 +236,7 @@ public class TablutRandomClient extends TablutClient {
 					boolean found = false;
 					Action a = null;
 					try {
-						a = new Action("z0", "z0", State.Turn.BLACK);
+						a = new Action("z0", "z0", Turn.BLACK);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -256,7 +250,7 @@ public class TablutRandomClient extends TablutClient {
 						String to = this.getCurrentState().getBox(selected[0], selected[1]);
 
 						try {
-							a = new Action(from, to, State.Turn.BLACK);
+							a = new Action(from, to, Turn.BLACK);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -284,15 +278,15 @@ public class TablutRandomClient extends TablutClient {
 
 				}
 
-				else if (state.getTurn().equals(StateTablut.Turn.WHITE)) {
+				else if (state.getTurn().equals(Turn.WHITE)) {
 					System.out.println("Waiting for your opponent move... ");
-				} else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
+				} else if (state.getTurn().equals(Turn.WHITEWIN)) {
 					System.out.println("YOU LOSE!");
 					System.exit(0);
-				} else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
+				} else if (state.getTurn().equals(Turn.BLACKWIN)) {
 					System.out.println("YOU WIN!");
 					System.exit(0);
-				} else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
+				} else if (state.getTurn().equals(Turn.DRAW)) {
 					System.out.println("DRAW!");
 					System.exit(0);
 				}

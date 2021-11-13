@@ -5,6 +5,7 @@ import java.awt.Image;
 
 import javax.swing.JFrame;
 
+import it.unibo.ai.didattica.competition.tablut.domain.IState;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 
 public abstract class Background extends JFrame {
@@ -18,18 +19,18 @@ public abstract class Background extends JFrame {
 	protected Image black;
 	protected Image white;
 	protected Image king;
-	protected State aState;
+	protected IState aState;
 	
 	public Background()
 	{
 		super();
 	}
 	
-	public State getaState() {
+	public IState getaState() {
 		return aState;
 	}
 	
-	public void setaState(State aState) {
+	public void setaState(IState aState) {
 		this.aState = aState;
 	}
 	
