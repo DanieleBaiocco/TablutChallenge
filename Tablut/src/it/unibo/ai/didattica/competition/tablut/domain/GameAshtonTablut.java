@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import it.unibo.ai.didattica.competition.tablut.ai.model.Coordinate;
 import it.unibo.ai.didattica.competition.tablut.exceptions.*;
 
 /**
@@ -70,27 +71,7 @@ public class GameAshtonTablut implements Game {
 		this.citadels.add("e8");
 	}
 
-	public static List<String> getCamps(){
-		List<String> citadels = new ArrayList<String>();
-		// this.strangeCitadels = new ArrayList<String>();
-		citadels.add("a4");
-		citadels.add("a5");
-		citadels.add("a6");
-		citadels.add("b5");
-		citadels.add("d1");
-		citadels.add("e1");
-		citadels.add("f1");
-		citadels.add("e2");
-		citadels.add("i4");
-		citadels.add("i5");
-		citadels.add("i6");
-		citadels.add("h5");
-		citadels.add("d9");
-		citadels.add("e9");
-		citadels.add("f9");
-		citadels.add("e8");
-		return citadels;
-	}
+
 	public GameAshtonTablut(IState state, int repeated_moves_allowed, int cache_size, String logs_folder,
 			String whiteName, String blackName) {
 		super();
@@ -149,7 +130,9 @@ public class GameAshtonTablut implements Game {
 		// this.strangeCitadels.add("e9");
 	}
 
-	@Override
+
+
+    @Override
 	public IState checkMove(IState state, Action a)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {

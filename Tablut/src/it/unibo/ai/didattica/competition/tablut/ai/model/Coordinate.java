@@ -1,5 +1,7 @@
 package it.unibo.ai.didattica.competition.tablut.ai.model;
 
+import it.unibo.ai.didattica.competition.tablut.ai.utility.TablutUtility;
+
 import java.util.Objects;
 
 public class Coordinate {
@@ -36,23 +38,29 @@ public class Coordinate {
 
 
 
+    //capisci se è corretto
      public Coordinate Look(Direction dir, int distance){
         Coordinate c = new Coordinate(this.row, this.col);
-        if (dir == Direction.UP){
-            c.setRow(this.row - distance);
-        } else if (dir == Direction.RIGHT){
-            c.setCol(this.col + distance);
-        } else if (dir == Direction.DOWN){
-            c.setRow(this.row + distance);
-        } else if (dir == Direction.LEFT){
-            c.setCol(this.col - distance);
-        }
+         TablutUtility.getInstance().switchOnT(dir, c,
+                 cord -> cord.setRow(this.row - distance),
+                 cord -> cord.setRow(this.row + distance),
+                 cord -> cord.setCol(this.col - distance),
+                 cord -> cord.setCol(this.col + distance));
         return c;
     }
 
 
     public Coordinate Look(Direction dir){
         return Look(dir, 1);
+    }
+
+
+    public boolean closeTo(Coordinate other){
+        if(other.getCol() < 0 || other.getRow() < 0)
+            return false;
+
+        int res = this.getCol() - other.getCol() + this.getRow() - other.getRow();
+        return (res == 1 || res == -1);
     }
 
     @Override

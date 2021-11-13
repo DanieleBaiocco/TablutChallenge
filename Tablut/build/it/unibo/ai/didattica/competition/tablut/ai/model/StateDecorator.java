@@ -1,50 +1,55 @@
 package it.unibo.ai.didattica.competition.tablut.ai.model;
 
 import it.unibo.ai.didattica.competition.tablut.ai.utility.Pair;
+import it.unibo.ai.didattica.competition.tablut.ai.utility.TablutUtility;
 import it.unibo.ai.didattica.competition.tablut.domain.*;
+
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class StateDecorator implements IState {
 
     private final IState state;
-    private final List<String> camps;
+    private final List<Coordinate> camps;
     private final Direction[] directions;
     public StateDecorator(IState state){
         this.state = state;
-        camps = GameAshtonTablut.getCamps();
+        camps = TablutUtility.getInstance().getCamps();
         directions = new Direction[]{Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT};
     }
 
+    //capisci se è corretto
     public List<Pair<Coordinate,Pawn>> LookDirection(Direction dir, Coordinate p) {
         List<Pair<Coordinate,Pawn>> pawns = new ArrayList<>();
-        if (dir == Direction.UP) {
+        TablutUtility.getInstance().switchOnT(dir, p,
+                cord -> {
+                    for (int i = cord.getRow(); i > 0; i--) {
+                        Pair<Coordinate, Pawn> pair =
+                                new Pair<>(new Coordinate(i, cord.getCol()),state.getPawn(i, cord.getCol()));
+                        pawns.add(pair);
+                    }
+                },
+                cord -> { for (int i = cord.getRow(); i < state.getBoard().length; i++) {
+                    Pair<Coordinate, Pawn> pair =
+                            new Pair<>(new Coordinate(i, cord.getCol()),state.getPawn(i, cord.getCol()));
+                    pawns.add(pair);
+                }},
+                cord -> { for (int j = cord.getCol(); j > 0; j--) {
+                    Pair<Coordinate, Pawn> pair =
+                            new Pair<>(new Coordinate(cord.getRow(), j),state.getPawn(cord.getRow(), j));
+                    pawns.add(pair);
+                }},
+                cord -> {for (int j = cord.getCol(); j < state.getBoard()[cord.getRow()].length; j++) {
+                    Pair<Coordinate, Pawn> pair =
+                            new Pair<>(new Coordinate(cord.getRow(), j),state.getPawn(cord.getRow(), j));
+                    pawns.add(pair);
+                }}
+                );
 
-            for (int i = p.getRow(); i > 0; i--) {
-                Pair<Coordinate, Pawn> pair =
-                        new Pair<>(new Coordinate(i, p.getCol()),state.getPawn(i, p.getCol()));
-                pawns.add(pair);
-            }
-        } else if (dir == Direction.RIGHT) {
-            for (int j = p.getCol(); j < state.getBoard()[p.getRow()].length; j++) {
-                Pair<Coordinate, Pawn> pair =
-                        new Pair<>(new Coordinate(p.getRow(), j),state.getPawn(p.getRow(), j));
-                pawns.add(pair);
-            }
-        } else if (dir == Direction.DOWN) {
-            for (int i = p.getRow(); i < state.getBoard().length; i++) {
-                Pair<Coordinate, Pawn> pair =
-                        new Pair<>(new Coordinate(i, p.getCol()),state.getPawn(i, p.getCol()));
-                pawns.add(pair);
-            }
-        } else if (dir == Direction.LEFT) {
-            for (int j = p.getCol(); j > 0; j--) {
-                Pair<Coordinate, Pawn> pair =
-                        new Pair<>(new Coordinate(p.getRow(), j),state.getPawn(p.getRow(), j));
-                pawns.add(pair);
-            }
-        }
         return pawns;
     }
     public List<Action> getAllWhiteMoves(){
@@ -116,9 +121,6 @@ public class StateDecorator implements IState {
         return map;
     }
 
-    public List<String> getCamps(){
-        return this.camps;
-    }
 
     public IState getState() {
         return state;
@@ -173,4 +175,5 @@ public class StateDecorator implements IState {
     public int getNumberOf(Pawn color){
         return this.state.getNumberOf(color);
     }
+
 }
