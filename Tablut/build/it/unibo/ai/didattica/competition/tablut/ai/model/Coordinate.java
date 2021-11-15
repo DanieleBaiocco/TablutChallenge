@@ -1,6 +1,9 @@
 package it.unibo.ai.didattica.competition.tablut.ai.model;
 
+import it.unibo.ai.didattica.competition.tablut.ai.utility.Pair;
 import it.unibo.ai.didattica.competition.tablut.ai.utility.TablutUtility;
+import it.unibo.ai.didattica.competition.tablut.domain.IState;
+import it.unibo.ai.didattica.competition.tablut.domain.Pawn;
 
 import java.util.Objects;
 
@@ -36,22 +39,35 @@ public class Coordinate {
         return ret;
     }
 
-
-
-    //capisci se è corretto
-     public Coordinate Look(Direction dir, int distance){
+    public Pair<Coordinate, Pawn> look(Direction dir, IState state){
+        return look(dir, 1, state);
+    }
+    public Pair<Coordinate, Pawn> look (Direction dir, int distance, IState state){
         Coordinate c = new Coordinate(this.row, this.col);
-         TablutUtility.getInstance().switchOnT(dir, c,
-                 cord -> cord.setRow(this.row - distance),
-                 cord -> cord.setRow(this.row + distance),
-                 cord -> cord.setCol(this.col - distance),
-                 cord -> cord.setCol(this.col + distance));
-        return c;
+        Pair<Coordinate, Pawn> pair = new Pair<>(c, Pawn.EMPTY);
+        TablutUtility.getInstance().switchOnT(dir, pair,
+                pa -> {
+                    pa.getFirst().setRow(this.row - distance);
+                    updatePairWithPawn(pa, state);
+                    },
+                pa -> {
+                    pa.getFirst().setRow(this.row + distance);
+                    updatePairWithPawn(pa, state);
+                            },
+                pa -> {
+                    pa.getFirst().setCol(this.col - distance);
+                    updatePairWithPawn(pa, state);
+                },
+                pa -> {
+                    pa.getFirst().setCol(this.col + distance);
+                    updatePairWithPawn(pa, state);
+                });
+        return pair;
     }
 
-
-    public Coordinate Look(Direction dir){
-        return Look(dir, 1);
+    private void updatePairWithPawn(Pair<Coordinate, Pawn> pa, IState state) {
+        Pawn pawnToInsert = state.getPawn(pa.getFirst().row, pa.getFirst().col);
+        pa.setSecond(pawnToInsert);
     }
 
 

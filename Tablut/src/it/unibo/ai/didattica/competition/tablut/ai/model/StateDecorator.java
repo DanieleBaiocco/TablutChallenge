@@ -73,11 +73,11 @@ public class StateDecorator implements IState {
         List<Coordinate> blackPieces = pieces.get(Pawn.BLACK);
         List<Action> moves = new ArrayList<>();
         for(Coordinate corBlackPos : blackPieces) {
-            boolean insideCamp = camps.contains(corBlackPos.getBox());
+            boolean insideCamp = camps.contains(corBlackPos);
             for (Direction dir : directions) {
                 List<Pair<Coordinate, Pawn>> candidateMoves = LookDirection(dir, corBlackPos);
                 fillMoves(candidateMoves, corBlackPos,
-                        (pair) -> pair.getSecond() == Pawn.EMPTY && (!camps.contains(pair.getFirst().getBox()) || insideCamp)
+                        (pair) -> pair.getSecond() == Pawn.EMPTY && (!camps.contains(pair.getFirst()) || insideCamp)
                         ,moves);
             }
         }
@@ -108,10 +108,10 @@ public class StateDecorator implements IState {
      */
     public Map<Pawn, List<Coordinate>> getPieces(){
         Pawn[][] board = state.getBoard();
-        Map<Pawn, List<Coordinate>> map = new HashMap<Pawn, List<Coordinate>>();
-        map.put(Pawn.KING, new ArrayList<Coordinate>());
-        map.put(Pawn.WHITE, new ArrayList<Coordinate>());
-        map.put(Pawn.BLACK, new ArrayList<Coordinate>());
+        Map<Pawn, List<Coordinate>> map = new HashMap<>();
+        map.put(Pawn.KING, new ArrayList<>());
+        map.put(Pawn.WHITE, new ArrayList<>());
+        map.put(Pawn.BLACK, new ArrayList<>());
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (map.containsKey(board[i][j]))

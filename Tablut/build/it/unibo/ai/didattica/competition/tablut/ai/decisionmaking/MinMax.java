@@ -20,16 +20,15 @@ public class MinMax {
     public MinMax(Turn player, int depth) {
         this.player = player;
         this.depth = depth;
-        this.heuristic = new HeuristicNiegghie();
-
     }
 
     //TODO
     //capisci perchè non usi il timeout e il player del costruttore
     public Action makeDecision(IState state, int timeout) {
+        this.heuristic = new HeuristicNiegghie(new StateDecorator(state));
         double alpha = Double.NEGATIVE_INFINITY;
         double beta = Double.POSITIVE_INFINITY;
-        minmaxComputation(new StateDecorator(state), this.depth, alpha, beta, state.getTurn() == Turn.WHITE);
+        minmaxComputation(state, this.depth, alpha, beta, state.getTurn() == Turn.WHITE);
         return this.bestAction;
     }
 
@@ -37,7 +36,7 @@ public class MinMax {
         Turn currentTurn = currentState.getTurn();
         StateDecorator stateDeco = new StateDecorator(currentState);
         if(depth == 0 || currentTurn == Turn.WHITEWIN || currentTurn == Turn.BLACKWIN){
-            return this.heuristic.evaluate(stateDeco, depth);
+            return this.heuristic.evaluate();
         }
         List<Action> possibleMoves = this.getAllPossibleMoves(stateDeco, currentTurn);
         if(maximisingPlayer){

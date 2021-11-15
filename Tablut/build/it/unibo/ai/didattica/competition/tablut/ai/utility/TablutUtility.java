@@ -75,6 +75,8 @@ public class TablutUtility {
         return instance;
     }
 
+
+    //TODO POTREBBERO ESSERE STATICI
     public IState movePawn(IState state, Action action){
         IState newState = this.applyAction(state, action);
         if (state.getTurn().equalsTurn("W")) {
@@ -86,6 +88,8 @@ public class TablutUtility {
     }
 
 
+
+    // TODO SPOSTA IN GAMEASHTON TABLUT
 
     //guarda al TURN in Action e usalo
     private IState applyAction(IState state, Action a) {
@@ -104,6 +108,7 @@ public class TablutUtility {
         return state;
     }
 
+    //TODO POTREBBO ESSERE STATICI
     public <T> void switchOnT(Direction dir, T t, Consumer<T> consumerUp,
                              Consumer<T> consumerDown, Consumer<T> consumerLeft,
                              Consumer<T> consumerRight){
