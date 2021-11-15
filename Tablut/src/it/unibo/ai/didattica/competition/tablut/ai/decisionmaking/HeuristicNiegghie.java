@@ -10,9 +10,9 @@ import it.unibo.ai.didattica.competition.tablut.domain.Turn;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//TODO
 public class HeuristicNiegghie {
 
     private final List<Coordinate> camps;
@@ -32,6 +32,7 @@ public class HeuristicNiegghie {
             +0//???TODO pedine mangiate che liberano una posizione vicino al re
     };
 
+    // TODO metter qui lo stato, metter sopra i pawns black, quelli white e il king :) in modo da chiamare getPieces una sola volta
     public HeuristicNiegghie() {
         this.camps = TablutUtility.getInstance().getCamps();
         this.winningPos = TablutUtility.getInstance().getWinningPos();
@@ -40,22 +41,22 @@ public class HeuristicNiegghie {
 
     // non so se effettivamente serve la depth
     public double evaluate(StateDecorator state, int depth) {
-        double value = staticWeights[0] * WinCondition(state)
-                + staticWeights[1] * KingToEscape(state)
+        double value = staticWeights[0] * winCondition(state)
+                + staticWeights[1] * kingToEscape(state)
                 + staticWeights[2] * state.getNumberOf(Pawn.WHITE)
                 + staticWeights[3] * state.getNumberOf(Pawn.BLACK)
-                + staticWeights[4] * KingSurrounded(state)
-                + staticWeights[5] * BlackMenaced(state)
+                + staticWeights[4] * kingSurrounded(state)
+                + staticWeights[5] * blackMenaced(state)
                 + staticWeights[6] * 0
                 + staticWeights[7] * 0
-                + staticWeights[8] * EscapesBlocked(state);
+                + staticWeights[8] * escapesBlocked(state);
         return value;
     }
 
     /**
      * checks if either black or white won
      */
-    private int WinCondition(StateDecorator state) {
+    private int winCondition(StateDecorator state) {
         if(state.getTurn() == Turn.WHITEWIN)
             return 1;
         if(state.getTurn() == Turn.BLACKWIN)
@@ -64,7 +65,7 @@ public class HeuristicNiegghie {
     }
 
 
-    private int KingToEscape(StateDecorator state) {
+    private int kingToEscape(StateDecorator state) {
         List<Coordinate> kingPositions = state.getPieces().get(Pawn.KING);
         Coordinate kingPosition = kingPositions.get(0);
         List<Long> pawnCouts = new ArrayList<>();
@@ -85,7 +86,7 @@ public class HeuristicNiegghie {
         Coordinate kingPosition = kingPositions.get(0);
         Stream<Direction> directionStream = buildDirectionBoolStream(state, kingPosition, state.getBoard().length);
         directionStream.forEach(dir -> {
-             //le posizioni potrebbero essere aggiunte alla lista in modo sbagliato(controllalo)
+             // TODO le posizioni potrebbero essere aggiunte alla lista in modo sbagliato(controllalo)
              List<Pair<Coordinate, Pawn>> pawnsInOneDir = state.LookDirection(dir, kingPosition);
              Optional<Pair<Coordinate, Pawn>> optcordpawn = pawnsInOneDir.stream()
                     .takeWhile(pawnPair -> pawnPair.getSecond() == Pawn.EMPTY)
@@ -126,12 +127,12 @@ public class HeuristicNiegghie {
         if(dirBool.get(dir)) {
             if (pred.test(camps)) {
                 dirBool.put(dir, false);
-                dirBool.put(Direction.values()[dir.getIndex()+2 % 4],false);
+                dirBool.put(dir.getOppositeDirection(),false);
             }
         }
     }
 
-    private double KingSurrounded(StateDecorator state){
+    private double kingSurrounded(StateDecorator state){
         Map<Pawn, List<Coordinate>> pieces = state.getPieces();
         Coordinate kingPosition = pieces.get(Pawn.KING).get(0);
         List<Coordinate> blackPieces = pieces.get(Pawn.BLACK);
@@ -144,66 +145,61 @@ public class HeuristicNiegghie {
     }
     //----
 
+    //piu è alto il contatore piu va a favore del bianco (piu è buona la posizione). Quindi il peso dovrà esser
+    //positivo. Nel caso simmetrico il peso sarà negativo perchè premia il nero.
+
     /*funzione che guarda ogni nero e controlla se sta per essere mangiato.
-    le condizioni sono che deve avere un lato occupato e l'opposto libero
+    le condizioni sono che deve avere un lato occupato da un bianco/una base/un trono (?) e l'opposto libero
     e deve esserci un pedone bianco che può muoversi e in una sola mossa
     catturare il nero.
     #TODO correggere l'uscita e i break in modo da minimizzare il costo computazionale per non guardare tutte le direzioni
     */
-    private int BlackMenaced(StateDecorator state){
-        int cont = 0;
-        for (Coordinate blackPosition : state.getPieces().get(Pawn.BLACK)){
-            //controllo se ho una pedina bianca attaccata
-            for (Direction dir : new Direction[]{Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT}){
-                Coordinate pawnToLook = blackPosition.Look(dir);
-                Pawn p = state.getPawn(pawnToLook.getRow(), pawnToLook.getCol());
-                if (p == Pawn.WHITE
-                        || p == Pawn.THRONE
-                        || p == Pawn.KING
-                        || this.camps.contains(pawnToLook))
-                {
-                    //siamo nel caso in cui c'è un rischio di cattura. Guardo se esiste un pedone bianco
-                    //in grado di mangiarmi
+    private int blackMenaced(StateDecorator state) {
+       return menaced(Pawn.BLACK, pawn -> pawn == Pawn.WHITE || pawn == Pawn.KING, state);
+    }
 
-                    int index = dir.getIndex();
-                    int oppositeDirectionIndx = (index + 2) % 4;
-                    Direction oppositeDirection = Direction.values()[oppositeDirectionIndx];
-                    Coordinate capturePosition = blackPosition.Look(Direction.values()[index]);
-                    //controllo se l'opposto, cioè la zona che deve venire occupata, non è ancora occupata
-                    if (state.getPawn(capturePosition.getRow(), capturePosition.getCol()) == Pawn.EMPTY
-                            && !this.camps.contains(capturePosition))
-                    {
-                        List<Direction> directions = new ArrayList<Direction>(List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT));
-                        directions.remove(dir);
-                        //guardo nelle tre direzioni se c'è un pedone bianco che può mangiarmi in una mossa. se c'è conto.
-                        //altrimenti se c'è un altro pedone prima, sono salvo da quella direzione.
-                        for (Direction secondDir : directions){
-                            List<Pair<Coordinate, Pawn>> menacers = state.LookDirection(secondDir, blackPosition.Look(oppositeDirection));
-                            for (int distance = 1; distance<menacers.size(); distance++){
-                                if (menacers.get(distance-1).getSecond() == Pawn.WHITE || menacers.get(distance-1).getSecond() == Pawn.KING){
-                                    cont++;
-                                    break;
-                                } else if ( menacers.get(distance-1).getSecond() != Pawn.EMPTY || camps.contains(capturePosition.Look(secondDir, distance))){
-                                    break;
-                                }
+    private int whiteMenaced(StateDecorator state){
+        return menaced(Pawn.WHITE, pawn -> pawn == Pawn.BLACK, state);
+    }
+
+    private int menaced(Pawn pawnToCheck, Predicate<Pawn> pred, StateDecorator state){
+        List<Coordinate> blackPieces = state.getPieces().get(pawnToCheck);
+        int countToReturn = 0;
+        for (Coordinate blackCoord : blackPieces) {
+            for (Direction dir : Direction.values()) {
+                Pair<Coordinate, Pawn> pairToLook = blackCoord.look(dir, state);
+                if (pred.test(pairToLook.getSecond()) || pairToLook.getSecond() == Pawn.THRONE
+                        || this.camps.contains(pairToLook.getFirst())) {
+                    Direction oppositeDirection = dir.getOppositeDirection();
+                    Pair<Coordinate, Pawn> pairCapturePosition = blackCoord.look(oppositeDirection, state);
+                    if (pairCapturePosition.getSecond() == Pawn.EMPTY
+                            && !this.camps.contains(pairCapturePosition.getFirst())) {
+                        List<Direction> captureDirs = Arrays.stream(Direction.values()).collect(Collectors.toList());
+                        captureDirs.remove(dir);
+                        for (Direction captureDir : captureDirs) {
+                            List<Pair<Coordinate, Pawn>> menacers = state.LookDirection(captureDir, pairCapturePosition.getFirst());
+                            //TODO gestisci caso in cui c'è un bianco ma alla prima posizione ( in quel caso non c'è rischio cattura ).
+                            Optional<Pair<Coordinate, Pawn>> opt = menacers.stream().takeWhile(pair -> pair.getSecond() == Pawn.EMPTY).reduce((x, y) -> y);
+                            Pair<Coordinate, Pawn> pointOfStop = opt.get();
+                            //TODO controlla che non sto sul bordo
+                            Pair<Coordinate, Pawn> pairNearToPointOfStop = pointOfStop.getFirst().look(captureDir, state);
+                            if (pred.test(pairNearToPointOfStop.getSecond())) {
+                                countToReturn++;
+                                break;
                             }
                         }
-                    } else {
-                        //sono salvo perchè ho l'altro lato già occupato
                     }
                 }
             }
         }
-        return cont;
+        return countToReturn;
     }
-
-
 
 
     /* riporta il numero di caselle di escape che sono occupate o che hanno in line diretta un nero
         come prima pedina visibile
     */
-    private int EscapesBlocked(StateDecorator state) {
+    private int escapesBlocked(StateDecorator state) {
         Pawn[][] board = state.getBoard();
         int cont = 0;
 
@@ -222,7 +218,6 @@ public class HeuristicNiegghie {
                 }
             }
         }
-
         //guardo uscite laterali destre
         for (int i = 1; i < board.length - 1; i++ ){
             if (camps.contains(new Coordinate(i, board[i].length)))  continue;
@@ -238,7 +233,6 @@ public class HeuristicNiegghie {
                 }
             }
         }
-
         //guardo uscite inferiori
         for (int j = 1; j < board[board.length-1].length - 1; j++ ){
             if (camps.contains(new Coordinate(board.length-1, j)))  continue;
@@ -254,7 +248,6 @@ public class HeuristicNiegghie {
                 }
             }
         }
-
         //guardo uscite laterali sinistre
         for (int i = 1; i < board.length - 1; i++ ){
             if (camps.contains(new Coordinate(i, 0)))  continue;
@@ -270,8 +263,6 @@ public class HeuristicNiegghie {
                 }
             }
         }
-
-
         return cont;
     }
 }

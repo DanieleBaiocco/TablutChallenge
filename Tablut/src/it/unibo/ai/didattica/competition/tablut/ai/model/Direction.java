@@ -11,5 +11,7 @@ public enum Direction {
     public int getIndex(){
         return i;
     }
-
+    public Direction getOppositeDirection(){
+        return Direction.values()[(this.getIndex()+2) %4];
+    }
 }
