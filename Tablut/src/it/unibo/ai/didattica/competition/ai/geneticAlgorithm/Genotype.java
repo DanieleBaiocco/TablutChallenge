@@ -15,26 +15,24 @@ public class Genotype {
     Fitness_fn function = new Fitness_fn();
 
     HashMap<Integer, String> genes = new HashMap<Integer, String>(){{
-        put(0, "KingEscaped");
+        put(0, "winCondition");
         put(1, "KingToEscape");
-        put(2, "NumberOfWhite");
-        put(3, "NumberOfBlack");
-        put(4, "KingSurrounded");
-        put(5, "BlackMenaced");
-        put(6, "?");
-        put(7, "??");
-        put(8, "EscapesBlocked");
+        put(2, "winPaths");
+        put(3, "NumberOfWhite");
+        put(4, "NumberOfBlack");
+        put(5, "KingSurrounded");
+        put(6, "BlackMenaced");
+        put(7, "EscapesBlocked");
     }};
 
     HashMap<String, ArrayList<Double>> genes_bound = new HashMap<String, ArrayList<Double>>(){{
-        put("KingEscaped", new ArrayList<Double>(Arrays.asList(1.0, 500.0)));
+        put("winCondition", new ArrayList<Double>(Arrays.asList(1.0, 500.0)));
         put("KingToEscape", new ArrayList<Double>(Arrays.asList(-50.0, 0.0)));
+        put("winPaths", new ArrayList<Double>(Arrays.asList(0.0, 50.0)));
         put("NumberOfWhite", new ArrayList<Double>(Arrays.asList(0.0, 5.0)));
         put("NumberOfBlack", new ArrayList<Double>(Arrays.asList(-5.0, 0.0)));
         put("KingSurrounded", new ArrayList<Double>(Arrays.asList(-10.0, 0.0)));
         put("BlackMenaced", new ArrayList<Double>(Arrays.asList(0.0, 5.0)));
-        /*put("?", new ArrayList<Double>(Arrays.asList(0.0, 0.0)));
-        put("??", new ArrayList<Double>(Arrays.asList(0.0, 0.0)));*/
         put("EscapesBlocked", new ArrayList<Double>(Arrays.asList(-5.0, 0.0)));
     }};
 
@@ -42,7 +40,7 @@ public class Genotype {
     Genotype(){
         this.num = 10; /* deve essere pari*/
         this.n_offsprings = 2;
-        this.n_genes = 9;
+        this.n_genes = 8;
         this.mutation_prob = 0.2;
         this.tournament_size = 3;
         this.max_generation = 3;
@@ -106,18 +104,17 @@ public class Genotype {
     public void initialize_population(){
 
         for(int i = 0; i < 2*this.num; i++){
-            double KingEscaped = getRandomNumber(genes_bound.get("KingEscaped").get(0), genes_bound.get("KingEscaped").get(1));
+            double winCondition = getRandomNumber(genes_bound.get("winCondition").get(0), genes_bound.get("winCondition").get(1));
             double KingToEscape = getRandomNumber(genes_bound.get("KingToEscape").get(0), genes_bound.get("KingToEscape").get(1));
+            double winPaths = getRandomNumber(genes_bound.get("winPaths").get(0), genes_bound.get("winPaths").get(1));
             double NumberOfWhite = getRandomNumber(genes_bound.get("NumberOfWhite").get(0), genes_bound.get("NumberOfWhite").get(1));
             double NumberOfBlack = getRandomNumber(genes_bound.get("NumberOfBlack").get(0), genes_bound.get("NumberOfBlack").get(1));
             double KingSurrounded = getRandomNumber(genes_bound.get("KingSurrounded").get(0), genes_bound.get("KingSurrounded").get(1));
             double BlackMenaced = getRandomNumber(genes_bound.get("BlackMenaced").get(0), genes_bound.get("BlackMenaced").get(1));
-            /*double ? = getRandomNumberUsingNextInt(genes_bound.get("?").get(0), genes_bound.get("?").get(1));
-            double ?? = getRandomNumberUsingNextInt(genes_bound.get("??").get(0), genes_bound.get("??").get(1));*/
             double EscapesBlocked = getRandomNumber(genes_bound.get("EscapesBlocked").get(0), genes_bound.get("EscapesBlocked").get(1));
 
             List<List<Double>> agent = new ArrayList<List<Double>>(){{
-                add(Arrays.asList(KingEscaped, KingToEscape, NumberOfWhite, NumberOfBlack, KingSurrounded, BlackMenaced, EscapesBlocked));
+                add(Arrays.asList(winCondition, KingToEscape, winPaths, NumberOfWhite, NumberOfBlack, KingSurrounded, BlackMenaced, EscapesBlocked));
                 add(Arrays.asList(0.0));
             }};
 
@@ -173,24 +170,22 @@ public class Genotype {
 
         offspring_1.get(0).set(0, parent_1.get(0).get(0));
         offspring_1.get(0).set(1, parent_1.get(0).get(1));
-        offspring_1.get(0).set(2, parent_2.get(0).get(2));
+        offspring_1.get(0).set(2, parent_1.get(0).get(2));
         offspring_1.get(0).set(3, parent_2.get(0).get(3));
         offspring_1.get(0).set(4, parent_2.get(0).get(4));
         offspring_1.get(0).set(5, parent_2.get(0).get(5));
-        offspring_1.get(0).set(6, parent_1.get(0).get(6));
+        offspring_1.get(0).set(6, parent_2.get(0).get(6));
         offspring_1.get(0).set(7, parent_1.get(0).get(7));
-        offspring_1.get(0).set(8, parent_1.get(0).get(8));
         offspring_1.get(1).set(0, 0.0);
 
         offspring_2.get(0).set(0, parent_2.get(0).get(0));
         offspring_2.get(0).set(1, parent_2.get(0).get(1));
-        offspring_2.get(0).set(2, parent_1.get(0).get(2));
+        offspring_2.get(0).set(2, parent_2.get(0).get(2));
         offspring_2.get(0).set(3, parent_1.get(0).get(3));
         offspring_2.get(0).set(4, parent_1.get(0).get(4));
         offspring_2.get(0).set(5, parent_1.get(0).get(5));
-        offspring_2.get(0).set(6, parent_2.get(0).get(6));
+        offspring_2.get(0).set(6, parent_1.get(0).get(6));
         offspring_2.get(0).set(7, parent_2.get(0).get(7));
-        offspring_2.get(0).set(8, parent_2.get(0).get(8));
         offspring_2.get(1).set(0, 0.0);
 
         this.mutation(offspring_1);
@@ -208,7 +203,7 @@ public class Genotype {
             int gene_number = getRandomIntNumber(0, this.n_genes);
             String mutated_gene = this.genes.get(gene_number);
 
-            if(gene_number > 5 && gene_number < 10){
+            if(gene_number > 5 && gene_number < 9){
                 offspring.get(0).set(gene_number, (0.01 * getRandomNumber(this.genes_bound.get(mutated_gene).get(0), this.genes_bound.get(mutated_gene).get(1))));
             }
             if(gene_number > 3 && gene_number < 6){
