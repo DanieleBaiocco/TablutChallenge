@@ -1,0 +1,38 @@
+nov 17, 2021 4:50:49 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accensione server
+nov 17, 2021 4:50:49 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Partita di Tablut
+nov 17, 2021 4:50:49 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for white connection..
+nov 17, 2021 4:50:57 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: White player connected
+nov 17, 2021 4:50:57 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura nome player bianco in corso..
+nov 17, 2021 4:50:58 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: White player name:	humanInter
+nov 17, 2021 4:50:58 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for Black connection..
+nov 17, 2021 4:50:58 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accettata connessione con client giocatore Nero
+nov 17, 2021 4:50:58 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura nome player nero in corso..
+nov 17, 2021 4:50:58 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Black player name:	Niegghie
+nov 17, 2021 4:50:58 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai giocatori
+nov 17, 2021 4:50:58 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 17, 2021 4:51:17 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: W Pawn from e3 to f3
+nov 17, 2021 4:51:17 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 4:51:17 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player B in corso..
+nov 17, 2021 4:51:18 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: B Pawn from null to null
+nov 17, 2021 4:51:18 PM it.unibo.ai.didattica.competition.server.Server run
+AVVERTENZA: Chiusura sistema per troppi errori giocatore nero
+nov 17, 2021 4:51:18 PM it.unibo.ai.didattica.competition.server.Server run
+AVVERTENZA: Errore invio messaggio ai client
+nov 17, 2021 4:51:18 PM it.unibo.ai.didattica.competition.server.Server run
+AVVERTENZA: Chiusura sistema

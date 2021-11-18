@@ -13,7 +13,8 @@
             <classpath>
                 <pathelement path="lib/gson-2.2.2.jar" />
                 <pathelement path="lib/commons-cli-1.4.jar" />
-                <pathelement path="lib/commons-validator-1.4.0.jar" />
+                <pathelement path="lib/junit-4.13.2.jar" />
+                <pathelement path="hamcrest-core-1.3.jar"/>
             </classpath>
         </javac>
         <copy todir="build">
@@ -22,7 +23,25 @@
     </target>
     
     <target name="server">
-        <java classname="it.unibo.ai.didattica.competition.tablut.server.Server" fork="true">
+        <java classname="it.unibo.ai.didattica.competition.server.Server" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="lib/commons-cli-1.4.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+    <target name="niegghiewhiteclient">
+        <java classname="it.unibo.ai.didattica.competition.ai.client.TablutNiegghieWhiteClient" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="lib/commons-cli-1.4.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+    <target name="niegghieblackclient">
+        <java classname="it.unibo.ai.didattica.competition.ai.client.TablutNiegghieBlackClient" fork="true">
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="lib/commons-cli-1.4.jar"/>
@@ -31,7 +50,7 @@
         </java>
     </target>
     <target name="randomwhite">
-        <java classname="it.unibo.ai.didattica.competition.tablut.client.TablutRandomWhiteClient" fork="true">
+        <java classname="it.unibo.ai.didattica.competition.client.TablutRandomWhiteClient" fork="true">
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="build"/>
@@ -39,7 +58,7 @@
         </java>
     </target>
     <target name="randomblack">
-        <java classname="it.unibo.ai.didattica.competition.tablut.client.TablutRandomBlackClient" fork="true">
+        <java classname="it.unibo.ai.didattica.competition.client.TablutRandomBlackClient" fork="true">
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="build"/>
@@ -48,7 +67,7 @@
     </target>
 	
     <target name="humanwhite">
-        <java classname="it.unibo.ai.didattica.competition.tablut.client.TablutHumanWhiteClient" fork="true">
+        <java classname="it.unibo.ai.didattica.competition.client.TablutHumanWhiteClient" fork="true">
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="build"/>
@@ -57,7 +76,7 @@
     </target>
 	
     <target name="humanblack">
-        <java classname="it.unibo.ai.didattica.competition.tablut.client.TablutHumanBlackClient" fork="true">
+        <java classname="it.unibo.ai.didattica.competition.client.TablutHumanBlackClient" fork="true">
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="build"/>
@@ -67,7 +86,7 @@
 	
 
     <target name="tester">
-        <java classname="it.unibo.ai.didattica.competition.tablut.tester.Tester" fork="true">
+        <java classname="it.unibo.ai.didattica.competition.tester.Tester" fork="true">
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="build"/>

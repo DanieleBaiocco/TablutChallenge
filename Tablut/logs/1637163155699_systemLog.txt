@@ -1,0 +1,28 @@
+nov 17, 2021 4:32:35 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accensione server
+nov 17, 2021 4:32:36 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Partita di Tablut
+nov 17, 2021 4:32:36 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for white connection..
+nov 17, 2021 4:35:53 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: White player connected
+nov 17, 2021 4:35:53 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura nome player bianco in corso..
+nov 17, 2021 4:35:54 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: White player name:	humanInter
+nov 17, 2021 4:35:54 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for Black connection..
+nov 17, 2021 4:35:54 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accettata connessione con client giocatore Nero
+nov 17, 2021 4:35:54 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura nome player nero in corso..
+nov 17, 2021 4:35:54 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Black player name:	Niegghie
+nov 17, 2021 4:35:54 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai giocatori
+nov 17, 2021 4:35:54 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 17, 2021 4:36:54 PM it.unibo.ai.didattica.competition.server.Server run
+AVVERTENZA: Timeout! Player W lose!
+nov 17, 2021 4:36:54 PM it.unibo.ai.didattica.competition.server.Server run
+AVVERTENZA: Chiusura sistema per timeout

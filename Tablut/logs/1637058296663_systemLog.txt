@@ -1,0 +1,32 @@
+nov 16, 2021 11:24:57 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accensione server
+nov 16, 2021 11:24:57 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Partita di Tablut
+nov 16, 2021 11:24:57 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for white connection..
+nov 16, 2021 11:26:38 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: White player connected
+nov 16, 2021 11:26:38 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura nome player bianco in corso..
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: White player name:	Niegghie
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for Black connection..
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accettata connessione con client giocatore Nero
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura nome player nero in corso..
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Black player name:	humanInterface
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai giocatori
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 16, 2021 11:26:40 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: W Pawn from null to null
+nov 16, 2021 11:26:40 AM it.unibo.ai.didattica.competition.server.Server run
+AVVERTENZA: Chiusura sistema per troppi errori giocatore bianco
+nov 16, 2021 11:26:40 AM it.unibo.ai.didattica.competition.server.Server run
+AVVERTENZA: Errore invio messaggio ai client
+nov 16, 2021 11:26:40 AM it.unibo.ai.didattica.competition.server.Server run
+AVVERTENZA: Chiusura sistema

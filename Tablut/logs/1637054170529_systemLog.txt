@@ -1,0 +1,6 @@
+nov 16, 2021 10:16:10 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accensione server
+nov 16, 2021 10:16:10 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Partita di Tablut
+nov 16, 2021 10:16:10 AM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for white connection..

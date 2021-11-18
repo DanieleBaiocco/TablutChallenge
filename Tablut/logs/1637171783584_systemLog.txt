@@ -1,0 +1,88 @@
+nov 17, 2021 6:56:23 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accensione server
+nov 17, 2021 6:56:23 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Partita di Tablut
+nov 17, 2021 6:56:23 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for white connection..
+nov 17, 2021 6:56:29 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: White player connected
+nov 17, 2021 6:56:29 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura nome player bianco in corso..
+nov 17, 2021 6:56:30 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: White player name:	humanInter
+nov 17, 2021 6:56:30 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Waiting for Black connection..
+nov 17, 2021 6:56:36 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Accettata connessione con client giocatore Nero
+nov 17, 2021 6:56:36 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura nome player nero in corso..
+nov 17, 2021 6:56:36 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Black player name:	Niegghie
+nov 17, 2021 6:56:36 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai giocatori
+nov 17, 2021 6:56:36 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 17, 2021 6:56:55 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: W Pawn from e4 to f4
+nov 17, 2021 6:56:55 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:56:55 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player B in corso..
+nov 17, 2021 6:56:59 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: B Pawn from d1 to d2
+nov 17, 2021 6:56:59 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:56:59 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 17, 2021 6:57:23 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: W Pawn from f4 to g4
+nov 17, 2021 6:57:23 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:57:23 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player B in corso..
+nov 17, 2021 6:57:25 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: B Pawn from e1 to d1
+nov 17, 2021 6:57:25 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:57:25 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 17, 2021 6:57:50 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: W Pawn from e5 to e4
+nov 17, 2021 6:57:50 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:57:50 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player B in corso..
+nov 17, 2021 6:57:52 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: B Pawn from d1 to e1
+nov 17, 2021 6:57:52 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:57:52 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 17, 2021 6:58:38 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: W Pawn from e3 to f3
+nov 17, 2021 6:58:38 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:58:38 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player B in corso..
+nov 17, 2021 6:58:40 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: B Pawn from e1 to d1
+nov 17, 2021 6:58:40 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:58:40 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 17, 2021 6:59:11 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: W Pawn from e4 to b4
+nov 17, 2021 6:59:11 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:59:11 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player B in corso..
+nov 17, 2021 6:59:14 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: B Pawn from d1 to e1
+nov 17, 2021 6:59:14 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client
+nov 17, 2021 6:59:14 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Lettura mossa player W in corso..
+nov 17, 2021 6:59:40 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Move received.	Turn: W Pawn from b4 to b1
+nov 17, 2021 6:59:40 PM it.unibo.ai.didattica.competition.server.Server run
+BUONO: Invio messaggio ai client

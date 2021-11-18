@@ -1,0 +1,34 @@
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.domain.GameAshtonTablut <init>
+BUONO: Players:	Niegghie	vs	humanInter
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.domain.GameAshtonTablut <init>
+BUONO: Repeated moves allowed:	0	Cache:	-1
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.domain.GameAshtonTablut <init>
+BUONO: Inizio partita
+nov 16, 2021 11:26:39 AM it.unibo.ai.didattica.competition.domain.GameAshtonTablut <init>
+BUONO: Stato:
+OOOBBBOOO
+OOOOBOOOO
+OOOOWOOOO
+BOOOWOOOB
+BBWWKWWBB
+BOOOWOOOB
+OOOOWOOOO
+OOOOBOOOO
+OOOBBBOOO
+-
+W
+nov 16, 2021 11:26:40 AM it.unibo.ai.didattica.competition.domain.GameAshtonTablut checkMove
+BUONO: Turn: W Pawn from null to null
+nov 16, 2021 11:26:40 AM it.unibo.ai.didattica.competition.domain.GameAshtonTablut endGame
+BUONO: Stato:
+OOOBBBOOO
+OOOOBOOOO
+OOOOWOOOO
+BOOOWOOOB
+BBWWKWWBB
+BOOOWOOOB
+OOOOWOOOO
+OOOOBOOOO
+OOOBBBOOO
+-
+BW
