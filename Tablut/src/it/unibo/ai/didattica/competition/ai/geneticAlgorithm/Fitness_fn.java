@@ -8,7 +8,7 @@ public class Fitness_fn {
 
     };
 
-    public void fit(ArrayList<List<List<Double>>> w_pop, ArrayList<List<List<Double>>> b_pop, Double timeout){
+    public void fit(Population w_pop, Population b_pop, Double timeout){
 
     };
 }

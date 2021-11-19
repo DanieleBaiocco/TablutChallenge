@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Random;
-import it.unibo.ai.didattica.competition.ai.geneticAlgorithm.Fitness_fn;
 
 public class Genotype {
     int num, n_offsprings, n_genes, tournament_size, max_generation;
     double mutation_prob, timeout;
-    ArrayList<List<List<Double>>> white_population = new ArrayList<List<List<Double>>>();
-    ArrayList<List<List<Double>>> black_population = new ArrayList<List<List<Double>>>();
+    Population white_population = new Population();
+    Population black_population = new Population();
     Fitness_fn function = new Fitness_fn();
 
     HashMap<Integer, String> genes = new HashMap<Integer, String>(){{
@@ -66,32 +65,32 @@ public class Genotype {
 
         while(generation < this.max_generation){
             generation += 1;
-            ArrayList<List<List<Double>>> new_white_population = new ArrayList<List<List<Double>>>();
-            ArrayList<List<List<Double>>> new_black_population = new ArrayList<List<List<Double>>>();
+            Population new_white_population = new Population();
+            Population new_black_population = new Population();
 
-            ArrayList<List<List<Double>>> parents_1 = new ArrayList<List<List<Double>>>();
-            ArrayList<List<List<Double>>> parents_2 = new ArrayList<List<List<Double>>>();
+            Population parents_1 = new Population();
+            Population parents_2 = new Population();
 
-            ArrayList<List<List<Double>>> white_children = new ArrayList<List<List<Double>>>();
-            ArrayList<List<List<Double>>> black_children = new ArrayList<List<List<Double>>>();
+            Population white_children = new Population();
+            Population black_children = new Population();
 
-            while(new_white_population.size() < this.num){
+            while(new_white_population.getSize() < this.num){
                 parents_1 = this.tournament_selection(); //one white_parent and one black_parent
                 parents_2 = this.tournament_selection();
 
-                white_children = this.two_point_cross_over(parents_1.get(0), parents_2.get(0));
-                black_children = this.two_point_cross_over(parents_1.get(1), parents_2.get(1));
+                white_children = this.two_point_cross_over(parents_1.getIndividual(0), parents_2.getIndividual(0));
+                black_children = this.two_point_cross_over(parents_1.getIndividual(1), parents_2.getIndividual(1));
 
-                new_white_population.add(white_children.get(0));
-                new_white_population.add(white_children.get(1));
-                new_black_population.add(black_children.get(0));
-                new_black_population.add(black_children.get(1));
+                new_white_population.add(white_children.getIndividual(0));
+                new_white_population.add(white_children.getIndividual(1));
+                new_black_population.add(black_children.getIndividual(0));
+                new_black_population.add(black_children.getIndividual(1));
 
             }
 
             System.out.printf("----------New Population %d Games ----------", generation);
             function.fit(new_white_population, new_black_population, this.timeout);
-            this.truncation_selection(new_white_population, new_black_population);
+            //this.truncation_selection(new_white_population, new_black_population);
             System.out.printf("----------Generation %d ----------", generation);
             function.fit(this.white_population, this.black_population, this.timeout);
 
@@ -113,10 +112,9 @@ public class Genotype {
             double BlackMenaced = getRandomNumber(genes_bound.get("BlackMenaced").get(0), genes_bound.get("BlackMenaced").get(1));
             double EscapesBlocked = getRandomNumber(genes_bound.get("EscapesBlocked").get(0), genes_bound.get("EscapesBlocked").get(1));
 
-            List<List<Double>> agent = new ArrayList<List<Double>>(){{
-                add(Arrays.asList(winCondition, KingToEscape, winPaths, NumberOfWhite, NumberOfBlack, KingSurrounded, BlackMenaced, EscapesBlocked));
-                add(Arrays.asList(0.0));
-            }};
+            Agent agent = new Agent();
+            agent.setGenes(Arrays.asList(winCondition, KingToEscape, winPaths, NumberOfWhite, NumberOfBlack, KingSurrounded, BlackMenaced, EscapesBlocked));
+            agent.setScore(0.0);
 
             if (i < this.num){
                 this.white_population.add(agent);
@@ -137,22 +135,22 @@ public class Genotype {
         return random.nextInt()*(max - min) + min;
     };
 
-    public ArrayList<List<List<Double>>> tournament_selection(){
-        ArrayList<List<List<Double>>> best_players = new ArrayList<List<List<Double>>>();
-        List<List<Double>> best_white_player = new ArrayList<List<Double>>();
-        List<List<Double>> best_black_player = new ArrayList<List<Double>>();
+    public Population tournament_selection(){
+        Population best_players = new Population();
+        Agent best_white_player = new Agent();
+        Agent best_black_player = new Agent();
 
         for(int i = 0; i < this.tournament_size; i++){
-            List<List<Double>> white_player = new ArrayList<List<Double>>();
-            List<List<Double>> black_player = new ArrayList<List<Double>>();
+            Agent white_player = new Agent();
+            Agent black_player = new Agent();
 
-            white_player = this.white_population.get(getRandomIntNumber(0, this.num));
-            black_player = this.black_population.get(getRandomIntNumber(0, this.num));
+            white_player = this.white_population.getIndividual(getRandomIntNumber(0, this.num));
+            black_player = this.black_population.getIndividual(getRandomIntNumber(0, this.num));
 
-            if(best_white_player.isEmpty() || white_player.get(1).get(0) > best_white_player.get(1).get(0)){
+            if(best_white_player.isUndefined() || white_player.getScore() > best_white_player.getScore()){
                 best_white_player = white_player;
             }
-            if(best_black_player.isEmpty() || black_player.get(1).get(0) > best_black_player.get(1).get(0)){
+            if(best_black_player.isUndefined() || black_player.getScore() > best_black_player.getScore()){
                 best_black_player = black_player;
             }
         }
@@ -163,30 +161,18 @@ public class Genotype {
         return best_players;
     }
 
-    public ArrayList<List<List<Double>>> two_point_cross_over(List<List<Double>> parent_1, List<List<Double>> parent_2){
-        ArrayList<List<List<Double>>> children = new ArrayList<List<List<Double>>>();
-        List<List<Double>> offspring_1 = new ArrayList<List<Double>>();
-        List<List<Double>> offspring_2 = new ArrayList<List<Double>>();
+    public Population two_point_cross_over(Agent parent_1, Agent parent_2){
+        Population children = new Population();
+        Agent offspring_1 = new Agent();
+        Agent offspring_2 = new Agent();
 
-        offspring_1.get(0).set(0, parent_1.get(0).get(0));
-        offspring_1.get(0).set(1, parent_1.get(0).get(1));
-        offspring_1.get(0).set(2, parent_1.get(0).get(2));
-        offspring_1.get(0).set(3, parent_2.get(0).get(3));
-        offspring_1.get(0).set(4, parent_2.get(0).get(4));
-        offspring_1.get(0).set(5, parent_2.get(0).get(5));
-        offspring_1.get(0).set(6, parent_2.get(0).get(6));
-        offspring_1.get(0).set(7, parent_1.get(0).get(7));
-        offspring_1.get(1).set(0, 0.0);
-
-        offspring_2.get(0).set(0, parent_2.get(0).get(0));
-        offspring_2.get(0).set(1, parent_2.get(0).get(1));
-        offspring_2.get(0).set(2, parent_2.get(0).get(2));
-        offspring_2.get(0).set(3, parent_1.get(0).get(3));
-        offspring_2.get(0).set(4, parent_1.get(0).get(4));
-        offspring_2.get(0).set(5, parent_1.get(0).get(5));
-        offspring_2.get(0).set(6, parent_1.get(0).get(6));
-        offspring_2.get(0).set(7, parent_2.get(0).get(7));
-        offspring_2.get(1).set(0, 0.0);
+        offspring_1.setGenes(Arrays.asList(parent_1.getGene(0), parent_1.getGene(1), parent_2.getGene(2), parent_2.getGene(3), 
+                                           parent_2.getGene(4), parent_2.getGene(5), parent_1.getGene(6), parent_1.getGene(7)));
+        offspring_1.setScore(0.0);
+        
+        offspring_2.setGenes(Arrays.asList(parent_2.getGene(0), parent_2.getGene(1), parent_1.getGene(2), parent_1.getGene(3), 
+                                           parent_1.getGene(4), parent_1.getGene(5), parent_2.getGene(6), parent_2.getGene(7)));
+        offspring_2.setScore(0.0);
 
         this.mutation(offspring_1);
         this.mutation(offspring_2);
@@ -198,19 +184,19 @@ public class Genotype {
     };
 
     //CONTROLLARE I RANGE DEI GENI DA MUTARE E DI QUANTO MUTARLI
-    public void mutation(List<List<Double>> offspring){
+    public void mutation(Agent offspring){
         if(this.getRandomNumber(0, 1) <= this.mutation_prob){
             int gene_number = getRandomIntNumber(0, this.n_genes);
             String mutated_gene = this.genes.get(gene_number);
 
             if(gene_number > 5 && gene_number < 9){
-                offspring.get(0).set(gene_number, (0.01 * getRandomNumber(this.genes_bound.get(mutated_gene).get(0), this.genes_bound.get(mutated_gene).get(1))));
+                offspring.setGene(gene_number, (0.01 * getRandomNumber(this.genes_bound.get(mutated_gene).get(0), this.genes_bound.get(mutated_gene).get(1))));
             }
             if(gene_number > 3 && gene_number < 6){
-                offspring.get(0).set(gene_number, (0.1 * getRandomNumber(this.genes_bound.get(mutated_gene).get(0), this.genes_bound.get(mutated_gene).get(1))));
+                offspring.setGene(gene_number, (0.1 * getRandomNumber(this.genes_bound.get(mutated_gene).get(0), this.genes_bound.get(mutated_gene).get(1))));
             }
             else{
-                offspring.get(0).set(gene_number, (getRandomNumber(this.genes_bound.get(mutated_gene).get(0), this.genes_bound.get(mutated_gene).get(1))));
+                offspring.setGene(gene_number, (getRandomNumber(this.genes_bound.get(mutated_gene).get(0), this.genes_bound.get(mutated_gene).get(1))));
             }
         }
     };
