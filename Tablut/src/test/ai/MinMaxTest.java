@@ -10,8 +10,8 @@ import org.junit.Test;
 
 public class MinMaxTest {
 
-    @Test
-    public void minMaxComputationTest(){
+    //@Test
+    /*public void minMaxComputationTest(){
         State state = StateTest.generateStartState();
         State randomState = StateTest.generateRandomState();
         System.out.println(randomState);
@@ -20,10 +20,10 @@ public class MinMaxTest {
             System.out.println(randomState);
             HeuristicNiegghie heuristic = new HeuristicNiegghie(new StateDecorator(randomState));
             System.out.println(heuristic.evaluate());
-        }*/
+        }
         MinMax minMax = new MinMax(Turn.WHITE, 4);
         Action a = minMax.makeDecision(randomState, 30);
         System.out.println(a);
 
-    }
+    }*/
 }

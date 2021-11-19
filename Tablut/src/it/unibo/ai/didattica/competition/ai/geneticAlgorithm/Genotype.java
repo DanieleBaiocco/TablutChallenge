@@ -2,7 +2,6 @@ package it.unibo.ai.didattica.competition.ai.geneticAlgorithm;
 
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -90,13 +89,14 @@ public class Genotype {
 
             System.out.printf("----------New Population %d Games ----------", generation);
             function.fit(new_white_population, new_black_population, this.timeout);
-            //this.truncation_selection(new_white_population, new_black_population);
+            this.truncation_selection(new_white_population, new_black_population);
             System.out.printf("----------Generation %d ----------", generation);
             function.fit(this.white_population, this.black_population, this.timeout);
 
-            //to do: Sort white and Black population to obtain in position 0 the best white/black player according to the second parameter [useful to print some infos]
         }
 
+        this.white_population.SortPopulation();
+        this.black_population.SortPopulation();
 
     };
 
@@ -201,10 +201,21 @@ public class Genotype {
         }
     };
 
-    public void truncation_selection(ArrayList<List<List<Double>>> new_white_population, ArrayList<List<List<Double>>> new_black_population){
-        /*I NEED TO SORT THIS.WHITE AND THIS.BLACK POPULATION BY SECOND PARAMETER OF EACH LIST of lists
-        NEW_WHITE AND NEW_BLACK POPULATION
-        PUT IN THIS.WHITE AND THIS.BLACK POPULATION HALF THIS.WHITE/THIS.BLACK AND HALF NEW_WHITE/NEW_BLACK*/
+    public void truncation_selection(Population new_white_population, Population new_black_population){
+        System.out.println("Truncation replacement");
+
+        this.white_population.SortPopulation();
+        this.black_population.SortPopulation();
+        new_white_population.SortPopulation();
+        new_black_population.SortPopulation();
+
+        int n = this.num/2;
+
+        for(int i = n; i < this.white_population.getSize(); i++){
+            this.white_population.setIndividual(i, new_white_population.getIndividual(i));
+            this.black_population.setIndividual(i, new_black_population.getIndividual(i));
+        }
+        
     };
 
 };

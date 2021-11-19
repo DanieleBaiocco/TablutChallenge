@@ -87,7 +87,7 @@ public class StateTest extends State {
         return state;
     }
     
-    public static StateTest generateRandomState(){
+    /*public static StateTest generateRandomState(){
         StateTest state = new StateTest();
         List<Coordinate> camps = TablutUtility.getInstance().getCamps();
         state.board = new Pawn[9][9];
@@ -141,7 +141,7 @@ public class StateTest extends State {
             state.turn = Turn.BLACK;
 
         return state;
-    }
+    }*/
 
 
     public static StateTest generateState2(){
