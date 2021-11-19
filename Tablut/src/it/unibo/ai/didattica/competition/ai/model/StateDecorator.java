@@ -103,7 +103,7 @@ public class StateDecorator implements IState {
                     String from = corPos.getBox();
                     String to = pair.getFirst().getBox();
                     try {
-                        moves.add(new Action(from, to, Turn.BLACK));
+                        moves.add(new Action(from, to, state.getTurn()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -208,7 +208,7 @@ public class Server implements Runnable {
 			if(cmd.hasOption("g")){
 				enableGui=true;
 			}else{
-				enableGui=false;
+				enableGui=true;
 			}
 
 		}catch (ParseException exp){

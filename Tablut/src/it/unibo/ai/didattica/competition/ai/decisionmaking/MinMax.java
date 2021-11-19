@@ -7,6 +7,13 @@ import it.unibo.ai.didattica.competition.domain.IState;
 import it.unibo.ai.didattica.competition.domain.Turn;
 
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.BiPredicate;
 
 public class MinMax {
@@ -25,10 +32,27 @@ public class MinMax {
     //TODO
     //capisci perchè non usi il timeout e il player del costruttore
     public Action makeDecision(IState state, int timeout) {
+        //System.out.println("inizio");
         this.heuristic = new HeuristicNiegghie(new StateDecorator(state));
         double alpha = Double.NEGATIVE_INFINITY;
         double beta = Double.POSITIVE_INFINITY;
-        minmaxComputation(state, this.depth, alpha, beta, state.getTurn() == Turn.WHITE);
+        ExecutorService asyncService = Executors.newCachedThreadPool();
+        Future<Double> futureTask = asyncService.submit(()-> minmaxComputation(state, this.depth, alpha, beta, state.getTurn() == Turn.WHITE));
+        try {
+            double result = futureTask.get(timeout, TimeUnit.SECONDS);
+        } 
+        catch (TimeoutException e){
+            futureTask.cancel(true);
+            System.out.println("TIMEOUT EXCEPTION");
+        }
+        catch (ExecutionException e){}
+        catch (InterruptedException e){}
+
+        if (futureTask.isCancelled()){
+            //TODO fai cose!!
+            //randomMove()
+        }
+
         return this.bestAction;
     }
 
@@ -36,15 +60,20 @@ public class MinMax {
         Turn currentTurn = currentState.getTurn();
         StateDecorator stateDeco = new StateDecorator(currentState);
         if(depth == 0 || currentTurn == Turn.WHITEWIN || currentTurn == Turn.BLACKWIN){
-            return this.heuristic.evaluate();
+            /*Random random = new Random();
+            if (random.nextInt(10000)==1) System.out.println(currentState.toString());
+            System.out.println("Evluation: "+this.heuristic.evaluate());*/
+            HeuristicNiegghie euristicTest = new HeuristicNiegghie(new StateDecorator(currentState));
+            return euristicTest.evaluate();
         }
         List<Action> possibleMoves = this.getAllPossibleMoves(stateDeco, currentTurn);
+        //System.out.println("all possible moves, size "+ possibleMoves.size());
         if(maximisingPlayer){
             double maxEval = Double.NEGATIVE_INFINITY;
             for(Action action : possibleMoves){
                 double evaluation = this.minmaxComputation(TablutUtility.getInstance().movePawn(
                         currentState.clone(), action),
-                        depth - 1, alpha, beta,false);
+                        depth - 1, alpha, beta, false);
                 maxEval = updateEvalAndBestAction((x, y) -> x < y, maxEval, evaluation, depth, action);
                 alpha = Math.max(alpha, evaluation);
                 if(beta <= alpha)
@@ -55,7 +84,7 @@ public class MinMax {
         else{
             double minEval = Double.POSITIVE_INFINITY;
             for(Action action : possibleMoves){
-                double evaluation = this.minmaxComputation(TablutUtility.getInstance().movePawn(currentState.clone(), action),depth - 1, alpha, beta,true);
+                double evaluation = this.minmaxComputation(TablutUtility.getInstance().movePawn(currentState.clone(), action),depth - 1, alpha, beta, true);
                 minEval = updateEvalAndBestAction(((x, y) -> y < x), minEval, evaluation, depth, action);
                 beta = Math.min(beta, evaluation);
                 if(beta <= alpha)
