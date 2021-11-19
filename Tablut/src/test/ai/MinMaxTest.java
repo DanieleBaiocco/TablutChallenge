@@ -12,9 +12,17 @@ public class MinMaxTest {
 
     @Test
     public void minMaxComputationTest(){
-        State state = StateTest.generateStateForMinMax();
+        State state = StateTest.generateStartState();
+        State randomState = StateTest.generateRandomState();
+        System.out.println(randomState);
+        /*for(int i = 0; i< 10; i++){
+            randomState = StateTest.generateRandomState();
+            System.out.println(randomState);
+            HeuristicNiegghie heuristic = new HeuristicNiegghie(new StateDecorator(randomState));
+            System.out.println(heuristic.evaluate());
+        }*/
         MinMax minMax = new MinMax(Turn.WHITE, 4);
-        Action a = minMax.makeDecision(state, 60);
+        Action a = minMax.makeDecision(randomState, 30);
         System.out.println(a);
 
     }

@@ -63,6 +63,18 @@ public class HeuristicNiegghie {
                 + staticWeights[8] * 0
                 + staticWeights[9] * 0
                 + staticWeights[10] * escapesBlocked();
+        /*System.out.println(" "+ winCondition()
+        + " "+ kingToEscape()
+        + " "+ winPaths()
+        + " "+ this.whitePawns.size()
+        + " "+ this.blackPawns.size()
+        + " "+ kingSurrounded()
+        + " "+ blackMenaced()
+        + " "+ whiteMenaced()
+        + " "+ 0
+        + " "+ 0
+        + " "+ escapesBlocked()
+        + " value: "+ value);*/
         return value;
     }
 
@@ -172,50 +184,44 @@ public class HeuristicNiegghie {
 
     private int menaced(List<Coordinate> coloredPieces, Predicate<Pawn> pred){
         int countToReturn = 0;
+        Map<Direction, Boolean> dirLeftToCheck = new HashMap<>();
+        for (Direction dir : Direction.values()) dirLeftToCheck.put(dir, true);
         for (Coordinate coord : coloredPieces) {
             for (Direction dir : Direction.values()) {
-                Pair<Coordinate, Pawn> pairToLook;
-                try {
-                    pairToLook = coord.look(dir, this.state);
-                }catch (IndexOutOfBoundsException e){
-                    continue;
-                }
-                if (pred.test(pairToLook.getSecond()) || pairToLook.getSecond() == Pawn.THRONE
-                        || this.camps.contains(pairToLook.getFirst())) {
-                    Direction oppositeDirection = dir.getOppositeDirection();
-                    Pair<Coordinate, Pawn> pairCapturePosition;
+                if (dirLeftToCheck.get(dir)){
+                    dirLeftToCheck.put(dir, false);
+                    Pair<Coordinate, Pawn> pairToLook;
                     try {
-                        pairCapturePosition = coord.look(oppositeDirection, this.state);
+                        pairToLook = coord.look(dir, this.state);
                     }catch (IndexOutOfBoundsException e){
                         continue;
                     }
-                    //controllo sul castle?
-                    if (pairCapturePosition.getSecond() == Pawn.EMPTY
-                            && !this.camps.contains(pairCapturePosition.getFirst())
-                            && !pairCapturePosition.getFirst().equals(this.castle)) {
-                        List<Direction> captureDirs = Arrays.stream(Direction.values()).collect(Collectors.toList());
-                        captureDirs.remove(dir);
-                        for (Direction captureDir : captureDirs) {
-                            List<Pair<Coordinate, Pawn>> menacers = this.state.LookDirection(captureDir, pairCapturePosition.getFirst());
-                            Optional<Pair<Coordinate, Pawn>> opt = menacers.stream().takeWhile(
-                                    pair -> pair.getSecond() == Pawn.EMPTY
-                                    && !this.camps.contains(pairCapturePosition.getFirst())
-                                    && !pairCapturePosition.getFirst().equals(this.castle)).reduce((x, y) -> y);
-                            Pair<Coordinate, Pawn> pointOfStop =
-                                    new Pair<>(new Coordinate(pairCapturePosition.getFirst().getRow(),
-                                            pairCapturePosition.getFirst().getCol()), pairCapturePosition.getSecond());
-                            if(opt.isPresent())
-                                pointOfStop = opt.get();
-                            Pair<Coordinate, Pawn> pairNearToPointOfStop;
-                            try {
-                                pairNearToPointOfStop = pointOfStop.getFirst()
-                                        .look(captureDir, this.state);
-                            }catch (IndexOutOfBoundsException e){
-                                continue;
-                            }
-                            if (pred.test(pairNearToPointOfStop.getSecond())) {
-                                countToReturn++;
-                                break;
+                    if (pred.test(pairToLook.getSecond()) || pairToLook.getSecond() == Pawn.THRONE
+                            || this.camps.contains(pairToLook.getFirst())) {
+                        Direction oppositeDirection = dir.getOppositeDirection();
+                        dirLeftToCheck.put(oppositeDirection, false);
+                        Pair<Coordinate, Pawn> pairCapturePosition;
+                        try {
+                            pairCapturePosition = coord.look(oppositeDirection, this.state);
+                        }catch (IndexOutOfBoundsException e){
+                            continue;
+                        }
+                        //controllo sul castle?
+                        if (pairCapturePosition.getSecond() == Pawn.EMPTY
+                                && !this.camps.contains(pairCapturePosition.getFirst())
+                                && !pairCapturePosition.getFirst().equals(this.castle)) {
+                            List<Direction> captureDirs = Arrays.stream(Direction.values()).collect(Collectors.toList());
+                            captureDirs.remove(dir);
+                            for (Direction captureDir : captureDirs) {
+                                List<Pair<Coordinate, Pawn>> menacers = this.state.LookDirection(captureDir, pairCapturePosition.getFirst());
+                                Optional<Pair<Coordinate, Pawn>> optFirstNonEmpty = menacers.stream().filter(
+                                    pair -> pair.getSecond() != Pawn.EMPTY 
+                                    || camps.contains(pair.getFirst())
+                                    || pair.getFirst().equals(this.castle)).findFirst();
+                                if (optFirstNonEmpty.isPresent() && pred.test(optFirstNonEmpty.get().getSecond())) {
+                                    countToReturn++;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -250,14 +256,11 @@ public class HeuristicNiegghie {
                 countToReturn++;
             else{
                 List<Pair<Coordinate, Pawn>> pawns = this.state.LookDirection(dir, winPos);
-                for (Pair<Coordinate, Pawn> p : pawns){
-                    if(p.getSecond() == Pawn.EMPTY && !this.camps.contains(p.getFirst()))
-                        continue;
-                    if(p.getSecond() == Pawn.BLACK)
-                        countToReturn++;
-                    break;
-
-                }
+                Optional<Pair<Coordinate, Pawn>> optFirstNonEmpty = pawns.stream().filter(
+                    pair -> pair.getSecond() != Pawn.EMPTY 
+                    || camps.contains(pair.getFirst())).findFirst();
+                if (optFirstNonEmpty.isPresent() && optFirstNonEmpty.get().getSecond() == Pawn.BLACK)
+                    countToReturn++;
             }
         }
         return countToReturn;
