@@ -1,7 +1,6 @@
 package it.unibo.ai.didattica.competition.ai.client;
 
 import it.unibo.ai.didattica.competition.ai.decisionmaking.MinMax;
-import it.unibo.ai.didattica.competition.client.TablutClient;
 import it.unibo.ai.didattica.competition.domain.Action;
 import it.unibo.ai.didattica.competition.domain.Turn;
 
@@ -10,7 +9,7 @@ import java.net.UnknownHostException;
 
 public class TablutNiegghieClient extends TablutClient {
 
-    public static final String NAME = "Niegghie";
+    public static final String NAME = "INiegghie";
     private final int depth;
 
     public TablutNiegghieClient(String player, int timeout, String ipAddress, int depth) throws UnknownHostException, IOException {
