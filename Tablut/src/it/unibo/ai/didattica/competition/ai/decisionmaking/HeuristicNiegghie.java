@@ -69,7 +69,8 @@ public class HeuristicNiegghie {
         + " "+ winPaths()
         + " "+ this.whitePawns.size()
         + " "+ this.blackPawns.size()
-        + " "+ kingSurrounded()
+        + " "+ kingSurrounded(kingCloseToCastle())
+        + " "+ kingSurrounded(!kingCloseToCastle())
         + " "+ blackMenaced()
         + " "+ whiteMenaced()
         + " "+ 0

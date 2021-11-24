@@ -21,7 +21,16 @@
             <fileset dir="src" excludes="*.java"/>
         </copy>
     </target>
-
+    
+    <target name="server">
+        <java classname="it.unibo.ai.didattica.competition.server.Server" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="lib/commons-cli-1.4.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
     <target name="niegghiewhiteclient">
         <java classname="it.unibo.ai.didattica.competition.ai.client.TablutNiegghieWhiteClient" fork="true">
             <classpath>
@@ -36,6 +45,50 @@
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="lib/commons-cli-1.4.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+    <target name="randomwhite">
+        <java classname="it.unibo.ai.didattica.competition.client.TablutRandomWhiteClient" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+    <target name="randomblack">
+        <java classname="it.unibo.ai.didattica.competition.client.TablutRandomBlackClient" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+	
+    <target name="humanwhite">
+        <java classname="it.unibo.ai.didattica.competition.client.TablutHumanWhiteClient" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+	
+    <target name="humanblack">
+        <java classname="it.unibo.ai.didattica.competition.client.TablutHumanBlackClient" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+	
+
+    <target name="tester">
+        <java classname="it.unibo.ai.didattica.competition.tester.Tester" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="build"/>
             </classpath>
         </java>
