@@ -24,18 +24,18 @@ public class HeuristicNiegghie {
     private final Coordinate king;
 
     static int staticWeights[] = new int[] { 500, // re sulla casella vincente
-            -20, // numero di pezzi (minore) fra il re e la fuga in una sola mossa.
-            +20,
-            2, // numero di pedine bianche
+            -15, // numero di pezzi (minore) fra il re e la fuga in una sola mossa.
+            +20, //numero di strade libere per il re verso la vittoria
+            4, // numero di pedine bianche
             -2, // numero di pedine nere
-            -5, // numero di pedine nere, castelli o accampamenti direttamente vicino al re
-            // (pericolo di cattura)
-            +1, // numero di neri che rischiano la cattura
-            -1, //numero di bianchi che rischiano la cattura
+            -6, // numero di pedine nere, castelli o accampamenti direttamente vicino al re (pericolo cattura)
+            -18,// numero di pedine nere o accampamenti vicini al re quando lontano dal castello (pericolo cattura)
+            +3, // numero di neri che rischiano la cattura
+            -2, //numero di bianchi che rischiano la cattura
             -1, // numero di mosse fino ad ora
             +1, // numero di bianchi e neri che si fornteggiano(rispetto al re)
-            -2, // numero di caselle di fuga con un nero davanti
-            +0//???TODO pedine mangiate che liberano una posizione vicino al re
+            -1, // numero di caselle di fuga con un nero davanti
+            +0  //???TODO pedine mangiate che liberano una posizione vicino al re
     };
 
     public HeuristicNiegghie(StateDecorator state) {
@@ -57,12 +57,13 @@ public class HeuristicNiegghie {
                 + staticWeights[2] * winPaths()
                 + staticWeights[3] * this.whitePawns.size()
                 + staticWeights[4] * this.blackPawns.size()
-                + staticWeights[5] * kingSurrounded()
-                + staticWeights[6] * blackMenaced()
-                + staticWeights[7] * whiteMenaced()
-                + staticWeights[8] * 0
+                + staticWeights[5] * kingSurrounded(kingCloseToCastle())
+                + staticWeights[6] * kingSurrounded(!kingCloseToCastle())
+                + staticWeights[7] * blackMenaced()
+                + staticWeights[8] * whiteMenaced()
                 + staticWeights[9] * 0
-                + staticWeights[10] * escapesBlocked();
+                + staticWeights[10] * 0
+                + staticWeights[11] * escapesBlocked();
         /*System.out.println(" "+ winCondition()
         + " "+ kingToEscape()
         + " "+ winPaths()
@@ -158,11 +159,20 @@ public class HeuristicNiegghie {
         }
     }
 
-    public double kingSurrounded(){
-        Stream<Coordinate> s = Stream.concat(this.blackPawns.stream(), this.camps.stream());
-        double count = s.filter(this.king::closeTo).count();
-        if(this.king.closeTo(this.castle)) count++;
-        return count;
+    public double kingSurrounded(boolean condition){
+        if (condition){
+            Stream<Coordinate> s = Stream.concat(this.blackPawns.stream(), this.camps.stream());
+            double count = s.filter(this.king::closeTo).count();
+            if(this.king.closeTo(this.castle)) count++;
+            return count;
+        }
+        return 0;
+    }
+
+    private boolean kingCloseToCastle(){
+        if(this.king.closeTo(this.castle) || this.king == this.castle)
+            return true;
+        else return false;
     }
     //----
 

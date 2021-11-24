@@ -6,7 +6,9 @@ import it.unibo.ai.didattica.competition.domain.Action;
 import it.unibo.ai.didattica.competition.domain.IState;
 import it.unibo.ai.didattica.competition.domain.Turn;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -23,6 +25,8 @@ public class MinMax {
     private HeuristicNiegghie heuristic;
 
     private Action bestAction;
+    private int leafEvaluatedCount;
+    Map<Integer, Integer> pathDiscardedCount;
 
     public MinMax(Turn player, int depth) {
         this.player = player;
@@ -33,6 +37,8 @@ public class MinMax {
     //capisci perchè non usi il timeout e il player del costruttore
     public Action makeDecision(IState state, int timeout) {
         //System.out.println("inizio");
+        this.leafEvaluatedCount = 0;
+        this.pathDiscardedCount = new HashMap<>();
         this.heuristic = new HeuristicNiegghie(new StateDecorator(state));
         double alpha = Double.NEGATIVE_INFINITY;
         double beta = Double.POSITIVE_INFINITY;
@@ -52,6 +58,9 @@ public class MinMax {
             //TODO fai cose!!
             //randomMove()
         }
+        System.out.print("configuration evaluated: "+this.leafEvaluatedCount+ "path discarded: ");
+        this.pathDiscardedCount.forEach( (depth, count) -> System.out.print("["+depth+"]"+count+"   "));
+        System.out.println();
 
         return this.bestAction;
     }
@@ -63,6 +72,7 @@ public class MinMax {
             /*Random random = new Random();
             if (random.nextInt(10000)==1) System.out.println(currentState.toString());
             System.out.println("Evluation: "+this.heuristic.evaluate());*/
+            this.leafEvaluatedCount++;
             HeuristicNiegghie euristicTest = new HeuristicNiegghie(new StateDecorator(currentState));
             return euristicTest.evaluate();
         }
@@ -76,8 +86,11 @@ public class MinMax {
                         depth - 1, alpha, beta, false);
                 maxEval = updateEvalAndBestAction((x, y) -> x < y, maxEval, evaluation, depth, action);
                 alpha = Math.max(alpha, evaluation);
-                if(beta <= alpha)
+                if(beta <= alpha){
+                    if (this.pathDiscardedCount.containsKey(depth)) this.pathDiscardedCount.put(depth, this.pathDiscardedCount.get(depth) + 1);
+                    else this.pathDiscardedCount.put(depth, 1);
                     break;
+                }
             }
             return maxEval;
         }
@@ -87,8 +100,11 @@ public class MinMax {
                 double evaluation = this.minmaxComputation(TablutUtility.getInstance().movePawn(currentState.clone(), action),depth - 1, alpha, beta, true);
                 minEval = updateEvalAndBestAction(((x, y) -> y < x), minEval, evaluation, depth, action);
                 beta = Math.min(beta, evaluation);
-                if(beta <= alpha)
+                if(beta <= alpha){
+                    if (this.pathDiscardedCount.containsKey(depth)) this.pathDiscardedCount.put(depth, this.pathDiscardedCount.get(depth) + 1);
+                    else this.pathDiscardedCount.put(depth, 1);
                     break;
+                }
             }
             return minEval;
         }
