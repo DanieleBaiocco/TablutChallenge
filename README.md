@@ -1,25 +1,14 @@
-# TablutCompetition
-Software for the Tablut Students Competition
+# TablutCompetition (Team INiegghie)
 
-## Installation on Ubuntu/Debian 
 
-From console, run these commands to install JDK 8 e ANT:
+## Prerequisite: run the server
 
-```
-sudo apt update
-sudo apt install openjdk-8-jdk -y
-sudo apt install ant -y
-```
-
-Now, clone the project repository:
+clone the project repository:
 
 ```
 git clone https://github.com/AGalassi/TablutCompetition.git
 ```
 
-## Run the Server without Eclipse
-
-The easiest way is to utilize the ANT configuration script from console.
 Go into the project folder (the folder with the `build.xml` file):
 ```
 cd TablutCompetition/Tablut
@@ -39,14 +28,36 @@ Run the server with:
 ant server
 ```
 
-Check the behaviour using the random players in two different console windows:
+## How to make our player play the game 
+
+Clone the project repository:
 
 ```
-ant randomwhite
-
-ant randomblack
+git clone https://github.com/DanieleBaiocco/TablutChallenge
 ```
 
-At this point, a window with the game state should appear.
+Go into the Executables folder:
+```
+cd TablutChallenge/Tablut/Executables/tablut
+```
 
-To be able to run other classes, change the `build.xml` file and re-compile everything
+From here you can execute a player as white typing in Linux:
+
+```
+./runmyplayer.sh white 60 localhost 
+```
+
+or as black typing:
+
+```
+./runmyplayer.sh black 60 localhost
+```
+
+The executable doesn't nothing but executing the jar file TablutINiegghie.jar in the same folder passing to it different arguments:
+
+```
+#!/bin/bash
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd $parent_path
+java -jar TablutINiegghie.jar "$1" "$2" "$3"
+```
