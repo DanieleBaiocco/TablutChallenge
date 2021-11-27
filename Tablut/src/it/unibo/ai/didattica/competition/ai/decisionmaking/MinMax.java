@@ -6,6 +6,7 @@ import it.unibo.ai.didattica.competition.domain.Action;
 import it.unibo.ai.didattica.competition.domain.IState;
 import it.unibo.ai.didattica.competition.domain.Turn;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -39,7 +40,7 @@ public class MinMax {
         ExecutorService asyncService = Executors.newCachedThreadPool();
         Future<Double> futureTask = asyncService.submit(()-> minmaxComputation(state, this.depth, alpha, beta, state.getTurn() == Turn.WHITE));
         try {
-            double result = futureTask.get(timeout, TimeUnit.SECONDS);
+            double result = futureTask.get(timeout - 1, TimeUnit.SECONDS);
         } 
         catch (TimeoutException e){
             futureTask.cancel(true);
@@ -67,6 +68,7 @@ public class MinMax {
             return euristicTest.evaluate();
         }
         List<Action> possibleMoves = this.getAllPossibleMoves(stateDeco, currentTurn);
+        Collections.shuffle(possibleMoves);
         //System.out.println("all possible moves, size "+ possibleMoves.size());
         if(maximisingPlayer){
             double maxEval = Double.NEGATIVE_INFINITY;
